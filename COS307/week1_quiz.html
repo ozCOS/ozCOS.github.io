@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COS 307 Advanced Skills in Child Protection and Family · Week 1 Reflective Quiz</title>
+<style>
+  :root{
+    --ink: #201113;
+    --ink-soft: #3A1B20;
+    --paper: #F3EFE6;
+    --paper-dim: #E7E0D0;
+    --gold: #C4444C;
+    --gold-deep: #7C1F2A;
+    --sage: #6F9A72;
+    --coral: #B08A3E;
+    --line: rgba(32,17,19,0.14);
+    --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --font-body: "Charter", "Georgia", "Iowan Old Style", serif;
+    --font-mono: "Courier New", Courier, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  body{
+    display:flex;
+    justify-content:center;
+    padding: 40px 16px 80px;
+  }
+
+  .stage{
+    width:100%;
+    max-width: 720px;
+  }
+
+  /* ---------- Header ---------- */
+  .masthead{
+    border-bottom: 1px solid rgba(243,239,230,0.18);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 8px;
+  }
+  .masthead h1{
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 5vw, 38px);
+    line-height: 1.15;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .masthead p{
+    margin:0;
+    color: rgba(243,239,230,0.65);
+    font-size: 15px;
+  }
+
+  /* ---------- Progress ---------- */
+  .progress-row{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+  .progress-track{
+    flex:1;
+    height: 3px;
+    background: rgba(243,239,230,0.16);
+    position: relative;
+    overflow:hidden;
+  }
+  .progress-fill{
+    position:absolute;
+    left:0; top:0; bottom:0;
+    background: var(--gold);
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-label{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(243,239,230,0.6);
+    white-space: nowrap;
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 2px;
+    padding: 34px 32px 30px;
+    position:relative;
+    box-shadow: 0 22px 50px rgba(0,0,0,0.35);
+  }
+
+  .q-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom: 18px;
+  }
+  .q-number{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+  }
+  .q-difficulty{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid var(--ink);
+    opacity: 0.55;
+  }
+
+  .q-prompt{
+    font-family: var(--font-display);
+    font-size: clamp(19px, 3.2vw, 23px);
+    line-height: 1.4;
+    margin: 0 0 22px;
+  }
+
+  .q-section-label{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gold-deep);
+    margin: -8px 0 14px;
+  }
+
+  /* Options: MCQ / TF */
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .opt{
+    display:flex;
+    align-items:flex-start;
+    gap: 12px;
+    text-align:left;
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 13px 16px;
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: var(--ink);
+    cursor:pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .opt:hover:not(:disabled){
+    border-color: var(--gold-deep);
+    background: rgba(211,162,74,0.08);
+  }
+  .opt .tag{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--gold-deep);
+    flex-shrink:0;
+    width: 16px;
+  }
+  .opt:disabled{ cursor:default; }
+  .opt.correct{
+    border-color: var(--sage);
+    background: rgba(111,154,114,0.14);
+  }
+  .opt.correct .tag{ color: var(--sage); }
+  .opt.incorrect{
+    border-color: var(--coral);
+    background: rgba(197,106,94,0.12);
+  }
+  .opt.incorrect .tag{ color: var(--coral); }
+  .opt.faded{ opacity: 0.45; }
+
+  /* Matching */
+  .match-rows{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .match-row{
+    display:grid;
+    grid-template-columns: 1fr 108px;
+    gap: 14px;
+    align-items:center;
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 10px;
+  }
+  .match-row .left-item{
+    font-size: 14.5px;
+    line-height: 1.4;
+  }
+  .match-row .left-item b{
+    font-family: var(--font-mono);
+    color: var(--gold-deep);
+    margin-right: 6px;
+  }
+  .match-row select{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 8px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 2px;
+  }
+  .match-row select:disabled{ opacity: 0.7; }
+  .match-key{
+    font-size: 13px;
+    color: rgba(23,34,43,0.7);
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .match-row.row-correct select{ border-color: var(--sage); }
+  .match-row.row-incorrect select{ border-color: var(--coral); }
+  .row-mark{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    margin-left: 8px;
+  }
+  .row-mark.ok{ color: var(--sage); }
+  .row-mark.bad{ color: var(--coral); }
+
+  /* Feedback */
+  .feedback{
+    display:none;
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-left: 3px solid var(--sage);
+    background: rgba(111,154,114,0.08);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .feedback.show{ display:block; }
+  .feedback.wrong{
+    border-left-color: var(--coral);
+    background: rgba(197,106,94,0.07);
+  }
+  .feedback .verdict{
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+    font-weight:bold;
+    display:block;
+    margin-bottom: 6px;
+  }
+  .feedback.wrong .verdict{ color: var(--coral); }
+  .feedback:not(.wrong) .verdict{ color: var(--sage); }
+
+  /* Buttons */
+  .actions{
+    display:flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  .btn{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    cursor:pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover{ background: var(--ink-soft); }
+  .btn:active{ transform: translateY(1px); }
+  .btn:disabled{
+    opacity: 0.3;
+    cursor:not-allowed;
+  }
+  .btn.gold{
+    background: var(--gold-deep);
+    color: var(--ink);
+  }
+  .btn.gold:hover{ background: var(--gold); }
+  .check-btn{
+    display:flex;
+    justify-content:flex-end;
+    margin-top: 4px;
+  }
+
+  /* Results */
+  .results{
+    display:none;
+    text-align:center;
+    padding: 56px 32px 46px;
+  }
+  .results.show{ display:block; }
+  .results .badge{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 14px;
+  }
+  .results h2{
+    font-family: var(--font-display);
+    font-size: clamp(30px, 6vw, 42px);
+    margin: 0 0 10px;
+    font-weight: 400;
+  }
+  .results .score-big{
+    font-family: var(--font-display);
+    font-size: 64px;
+    color: var(--gold-deep);
+    margin: 18px 0 4px;
+    line-height:1;
+  }
+  .results .score-sub{
+    font-size: 14px;
+    color: rgba(23,34,43,0.65);
+    margin-bottom: 30px;
+  }
+  .results .msg{
+    max-width: 460px;
+    margin: 0 auto 32px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: rgba(23,34,43,0.85);
+  }
+  .breakdown{
+    display:flex;
+    justify-content:center;
+    gap: 28px;
+    margin-bottom: 34px;
+    flex-wrap: wrap;
+  }
+  .breakdown div{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(23,34,43,0.55);
+  }
+  .breakdown strong{
+    display:block;
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .copyright{
+    text-align:center;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    color: rgba(243,239,230,0.4);
+    margin-top: 36px;
+  }
+
+  .hidden{ display:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; }
+  }
+
+  @media (max-width: 480px){
+    .card{ padding: 26px 20px 24px; }
+    .match-row{ grid-template-columns: 1fr; }
+    .match-row select{ width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="masthead">
+    <p class="eyebrow">COS 307 &middot; Advanced Skills in Child Protection and Family</p>
+    <h1>Week 1 Reflective Quiz</h1>
+    <p>Key concepts &amp; definitions — 15 questions, instant feedback on each.</p>
+  </div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">Question 1 of 15</div>
+  </div>
+
+  <div class="card" id="quizCard">
+    <!-- question content injected here -->
+  </div>
+
+  <div class="card results" id="resultsCard">
+    <p class="badge">Quiz Complete</p>
+    <h2 id="resultsHeadline">Well done.</h2>
+    <div class="score-big" id="scoreBig">0/15</div>
+    <div class="score-sub" id="scorePercent">0%</div>
+    <div class="breakdown">
+      <div><strong id="bkEasy">0/0</strong>Easy</div>
+      <div><strong id="bkMedium">0/0</strong>Medium</div>
+      <div><strong id="bkHard">0/0</strong>Hard</div>
+    </div>
+    <p class="msg" id="resultsMsg"></p>
+    <button class="btn gold" id="retestBtn">Retake the Quiz</button>
+  </div>
+
+  <p class="copyright">&copy; Kham Tran &middot; COS 307 Advanced Skills in Child Protection and Family</p>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "mcq", difficulty: "Easy",
+    prompt: "Statistically, how does the United Nations define the \u201cyouth\u201d age group?",
+    options: [
+      { tag: "A", text: "12 to 24 years" },
+      { tag: "B", text: "15 to 24 years" },
+      { tag: "C", text: "10 to 17 years" },
+      { tag: "D", text: "Below 18 years" }
+    ],
+    correct: "B",
+    grounding: "The United Nations statistically defines \u2018youth\u2019 as those persons between the ages of 15 and 24 years."
+  },
+  {
+    type: "mcq", difficulty: "Easy",
+    prompt: "Under the UN Convention on the Rights of the Child (UNCRC), an individual is considered a \u201cchild\u201d and possesses all UNCRC rights until they reach what age?",
+    options: [
+      { tag: "A", text: "15 years old" },
+      { tag: "B", text: "16 years old" },
+      { tag: "C", text: "18 years old" },
+      { tag: "D", text: "21 years old" }
+    ],
+    correct: "C",
+    grounding: "Under the UNCRC, a child means every human being below the age of 18 years."
+  },
+  {
+    type: "mcq", difficulty: "Medium",
+    prompt: "Based on the Australian Bureau of Statistics (ABS 2021) definition of a family, what is the minimum age that at least one person in the household must be?",
+    options: [
+      { tag: "A", text: "18 years old" },
+      { tag: "B", text: "16 years old" },
+      { tag: "C", text: "15 years old" },
+      { tag: "D", text: "12 years old" }
+    ],
+    correct: "C",
+    grounding: "The ABS family definition requires that at least one person in the family has to be 15 years or older."
+  },
+  {
+    type: "mcq", difficulty: "Medium",
+    prompt: "Which theory, developed by Murray Bowen, suggests that a young person's challenging behavior is often an interconnected symptom of family stress rather than an isolated individual problem?",
+    options: [
+      { tag: "A", text: "Ecological Theory" },
+      { tag: "B", text: "Strengths-Based Theory" },
+      { tag: "C", text: "Family Systems Theory" },
+      { tag: "D", text: "Trauma-Informed Practice" }
+    ],
+    correct: "C",
+    grounding: "Bowen's Family Systems Theory views the family as an emotional unit where behaviors are interconnected, suggesting a young person's behavior is a symptom of family stress rather than solely an individual problem."
+  },
+  {
+    type: "mcq", difficulty: "Medium",
+    prompt: "Evidence-Based Practice (EBP) in youth and community work is defined as a method that integrates which three essential components?",
+    options: [
+      { tag: "A", text: "Statutory rules, worker preferences, and organizational funding" },
+      { tag: "B", text: "Universal services, secondary support, and tertiary intervention" },
+      { tag: "C", text: "Advanced research evidence, practitioner expertise, and client values/preferences" },
+      { tag: "D", text: "Bioecological systems, cultural norms, and historical policies" }
+    ],
+    correct: "C",
+    grounding: "Evidence-based practices combine the most advanced research evidence, practitioners\u2019 expertise, and clients\u2019 values and preferences."
+  },
+  {
+    type: "mcq", difficulty: "Hard",
+    prompt: "Using Bronfenbrenner\u2019s Bioecological Model of Human Development, how would a practitioner classify a situation where a child suffers from hunger (Microsystem) because their mother cannot access vital healthcare (Exosystem)?",
+    options: [
+      { tag: "A", text: "A localized Microsystem defect" },
+      { tag: "B", text: "An interaction between the Exosystem and the Microsystem" },
+      { tag: "C", text: "A purely Chronosystem developmental shift" },
+      { tag: "D", text: "A localized Macrosystem cultural norm" }
+    ],
+    correct: "B",
+    grounding: "Bronfenbrenner's model shows human development is influenced by interconnected systems, such as how the Exosystem (e.g., mother's lack of healthcare) directly impacts the child's Microsystem (e.g., the child's hunger)."
+  },
+  {
+    type: "mcq", difficulty: "Hard",
+    prompt: "What is the primary ethical responsibility of a youth worker operating within Professor Howard Sercombe's concept of an \u201cintentionally limited relationship\u201d?",
+    options: [
+      { tag: "A", text: "To focus solely on the parent\u2019s demands and limit contact with the child." },
+      { tag: "B", text: "To establish a collaborative partnership bounded within a professional space to heal, repair, and grow." },
+      { tag: "C", text: "To work without professional boundaries and act as a replacement family member." },
+      { tag: "D", text: "To only speak with the youth during legal court proceedings." }
+    ],
+    correct: "B",
+    grounding: "Sercombe states the relationship is \u201cintentionally limited\u201d as a partnership in a professional space where worker and young person work together to heal hurts, repair damage, and grow into responsibility."
+  },
+  {
+    type: "tf", difficulty: "Easy",
+    prompt: "True or False: In most Australian jurisdictions, the Youth Justice system defines a \u201cyouth\u201d as someone aged between 10 and 17 years old if they commit an offence.",
+    correct: "True",
+    grounding: "In most Australian jurisdictions, the Youth Justice system defines a \u201cyouth\u201d as someone aged between 10 and 17 years old."
+  },
+  {
+    type: "tf", difficulty: "Easy",
+    prompt: "True or False: For Aboriginal and Torres Strait Islander peoples, family networks are strictly limited to the nuclear family unit.",
+    correct: "False",
+    grounding: "For Indigenous families, family extends beyond the immediate nuclear unit, encompassing a broad network of relatives and connections (elders, aunts, uncles, cousins, kin) who share a collectivist approach to child rearing."
+  },
+  {
+    type: "tf", difficulty: "Medium",
+    prompt: "True or False: A strengths-based approach focus is solution-focused and means ignoring a family\u2019s challenges or deficits entirely, even when there are child safety risks.",
+    correct: "False",
+    grounding: "In child protection, strengths-based practice is solution-focused but views the safety of the child as paramount, using strengths as motivators and tools for change rather than ignoring risks."
+  },
+  {
+    type: "tf", difficulty: "Medium",
+    prompt: "True or False: According to child development research, having a \u201cvoice\u201d in family matters is a documented protective factor that promotes a vulnerable child's wellbeing, safety, and development.",
+    correct: "True",
+    grounding: "Research argues \u201chaving a voice\u201d in family matters is a protective factor from harm and key to promoting a child\u2019s wellbeing, safety, and life development, especially for vulnerable children."
+  },
+  {
+    type: "tf", difficulty: "Hard",
+    prompt: "True or False: Trauma-informed services do no harm, which means they actively avoid re-traumatising or blaming victims for their efforts to manage their traumatic reactions.",
+    correct: "True",
+    grounding: "Trauma-informed services \u201cdo no harm\u201d\u2014they do not re-traumatise or blame victims for managing traumatic reactions, and they embrace a message of hope and optimism."
+  },
+  {
+    type: "matching", difficulty: "Medium",
+    prompt: "Match Bronfenbrenner\u2019s Systems with the correct case examples.",
+    left: [
+      { num: "1", label: "Microsystem" },
+      { num: "2", label: "Mesosystem" },
+      { num: "3", label: "Exosystem" },
+      { num: "4", label: "Macrosystem" },
+      { num: "5", label: "Chronosystem" }
+    ],
+    keyText: "A. Broad societal, political, and cultural belief systems in Australia. &nbsp;B. The passing of time and socio-historical events (e.g., historical trauma of the Stolen Generations). &nbsp;C. The young person's immediate daily environments, like their school or family home. &nbsp;D. The interaction between the family and the school (e.g., the principal contacting a family support service). &nbsp;E. Settings that affect the child indirectly (e.g., the parent's workplace or local government funding policies).",
+    options: ["A","B","C","D","E"],
+    correctMap: { "1":"C", "2":"D", "3":"E", "4":"A", "5":"B" },
+    grounding: "Microsystem = immediate daily environments; Mesosystem = interaction between microsystems (family\u2013school); Exosystem = indirect environments (workplace/funding); Macrosystem = broad cultural, political, societal values; Chronosystem = socio-historical events over time."
+  },
+  {
+    type: "matching", difficulty: "Hard",
+    prompt: "Match the 6 Core Principles of Trauma-Informed Practice (TIP) with their practical applications in youth work.",
+    left: [
+      { num: "1", label: "Safety" },
+      { num: "2", label: "Trust" },
+      { num: "3", label: "Choice" },
+      { num: "4", label: "Collaboration" },
+      { num: "5", label: "Empowerment" },
+      { num: "6", label: "Respect" }
+    ],
+    keyText: "A. Building reliable, consistent professional boundaries and being sensitive to a youth's history. &nbsp;B. Designing service rooms/layouts to be physically and emotionally comfortable and non-threatening. &nbsp;C. Working with young people and families on safety planning, rather than dictating rules. &nbsp;D. Moving past cultural stereotypes, respecting diversity, and acknowledging collective historical trauma. &nbsp;E. Ensuring the young person has a voice and the active opportunity to make their own decisions. &nbsp;F. Actively supporting self-advocacy and helping a young person feel in control of their own life space.",
+    options: ["A","B","C","D","E","F"],
+    correctMap: { "1":"B", "2":"A", "3":"E", "4":"C", "5":"F", "6":"D" },
+    grounding: "Safety = secure, comfortable environments; Trust = consistent, sensitive boundaries; Choice = clear opportunities to choose; Collaboration = working with, not doing to; Empowerment = self-advocacy and control; Respect = respecting diversity and collective histories."
+  },
+  {
+    type: "matching", difficulty: "Hard",
+    prompt: "Match the Australian service/organisation with its specific youth age eligibility.",
+    left: [
+      { num: "1", label: "WA Mental Health Commission" },
+      { num: "2", label: "Australian Institute of Health and Welfare (AIHW)" },
+      { num: "3", label: "Youth Justice System (most jurisdictions)" },
+      { num: "4", label: "Headspace National Youth Mental Health Foundation" }
+    ],
+    keyText: "A. 12 to 24 years old. &nbsp;B. 16 to 24 years old. &nbsp;C. 12 to 25 years old. &nbsp;D. 10 to 17 years old.",
+    options: ["A","B","C","D"],
+    correctMap: { "1":"B", "2":"A", "3":"D", "4":"C" },
+    grounding: "WA Mental Health Commission = 16 to 24 years; AIHW = 12 to 24 years; Youth Justice System = 10 to 17 years; Headspace = 12 to 25 years."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = new Array(QUESTIONS.length).fill(false);
+const byDifficulty = { Easy: {correct:0,total:0}, Medium:{correct:0,total:0}, Hard:{correct:0,total:0} };
+QUESTIONS.forEach(q => byDifficulty[q.difficulty].total++);
+
+const quizCard = document.getElementById('quizCard');
+const progressFill = document.getElementById('progressFill');
+const progressLabel = document.getElementById('progressLabel');
+const resultsCard = document.getElementById('resultsCard');
+
+function updateProgress(){
+  const pct = (current / QUESTIONS.length) * 100;
+  progressFill.style.width = pct + '%';
+  progressLabel.textContent = `Question ${Math.min(current+1, QUESTIONS.length)} of ${QUESTIONS.length}`;
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  updateProgress();
+  let html = `
+    <div class="q-meta">
+      <span class="q-number">Question ${current+1} / ${QUESTIONS.length}</span>
+      <span class="q-difficulty">${q.difficulty}</span>
+    </div>
+    <p class="q-prompt">${q.prompt}</p>
+  `;
+
+  if(q.type === 'mcq'){
+    html += '<div class="options" id="optionsWrap">';
+    q.options.forEach(opt => {
+      html += `<button class="opt" data-tag="${opt.tag}"><span class="tag">${opt.tag}</span><span>${opt.text}</span></button>`;
+    });
+    html += '</div>';
+  } else if(q.type === 'tf'){
+    html += '<div class="options" id="optionsWrap">';
+    ['True','False'].forEach(v => {
+      html += `<button class="opt" data-tag="${v}"><span class="tag">${v==='True'?'T':'F'}</span><span>${v}</span></button>`;
+    });
+    html += '</div>';
+  } else if(q.type === 'matching'){
+    html += `<p class="match-key">${q.keyText}</p>`;
+    html += '<div class="match-rows" id="matchRows">';
+    q.left.forEach(item => {
+      let opts = q.options.map(o => `<option value="${o}">${o}</option>`).join('');
+      html += `
+        <div class="match-row" data-num="${item.num}">
+          <div class="left-item"><b>${item.num}.</b>${item.label}</div>
+          <select>
+            <option value="">Select…</option>
+            ${opts}
+          </select>
+        </div>`;
+    });
+    html += '</div>';
+    html += '<div class="check-btn"><button class="btn" id="checkMatchBtn">Check Matches</button></div>';
+  }
+
+  html += `<div class="feedback" id="feedback"></div>`;
+  html += `<div class="actions"><button class="btn gold" id="nextBtn" disabled>Next Question</button></div>`;
+
+  quizCard.innerHTML = html;
+  attachHandlers(q);
+}
+
+function attachHandlers(q){
+  const feedback = document.getElementById('feedback');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function showFeedback(isCorrect, groundingText){
+    feedback.classList.add('show');
+    feedback.classList.toggle('wrong', !isCorrect);
+    feedback.innerHTML = `<span class="verdict">${isCorrect ? 'Correct' : 'Not quite'}</span>${groundingText}`;
+    nextBtn.disabled = false;
+    if(!answered[current]){
+      answered[current] = true;
+      if(isCorrect){
+        score++;
+        byDifficulty[q.difficulty].correct++;
+      }
+    }
+  }
+
+  if(q.type === 'mcq' || q.type === 'tf'){
+    const buttons = document.querySelectorAll('#optionsWrap .opt');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const chosen = btn.dataset.tag;
+        const isCorrect = chosen === q.correct;
+        buttons.forEach(b => {
+          b.disabled = true;
+          if(b.dataset.tag === q.correct){
+            b.classList.add('correct');
+          } else if(b === btn){
+            b.classList.add('incorrect');
+          } else {
+            b.classList.add('faded');
+          }
+        });
+        showFeedback(isCorrect, q.grounding);
+      });
+    });
+  }
+
+  if(q.type === 'matching'){
+    const checkBtn = document.getElementById('checkMatchBtn');
+    checkBtn.addEventListener('click', () => {
+      const rows = document.querySelectorAll('#matchRows .match-row');
+      let allFilled = true;
+      let correctCount = 0;
+      rows.forEach(row => {
+        const select = row.querySelector('select');
+        if(!select.value){ allFilled = false; }
+      });
+      if(!allFilled){
+        feedback.classList.add('show');
+        feedback.classList.add('wrong');
+        feedback.innerHTML = `<span class="verdict">Almost there</span>Please make a selection for every item before checking.`;
+        return;
+      }
+      rows.forEach(row => {
+        const num = row.dataset.num;
+        const select = row.querySelector('select');
+        select.disabled = true;
+        const isRowCorrect = select.value === q.correctMap[num];
+        row.classList.add(isRowCorrect ? 'row-correct' : 'row-incorrect');
+        const mark = document.createElement('span');
+        mark.className = 'row-mark ' + (isRowCorrect ? 'ok' : 'bad');
+        mark.textContent = isRowCorrect ? '\u2713' : `\u2717 (${q.correctMap[num]})`;
+        row.querySelector('.left-item').appendChild(mark);
+        if(isRowCorrect) correctCount++;
+      });
+      checkBtn.disabled = true;
+      const allCorrect = correctCount === rows.length;
+      showFeedback(allCorrect, `You matched ${correctCount} of ${rows.length} correctly. ${q.grounding}`);
+    });
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if(current < QUESTIONS.length - 1){
+      current++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  });
+}
+
+function showResults(){
+  updateProgress();
+  progressFill.style.width = '100%';
+  progressLabel.textContent = `Quiz complete`;
+  quizCard.classList.add('hidden');
+  resultsCard.classList.add('show');
+
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  document.getElementById('scoreBig').textContent = `${score}/${QUESTIONS.length}`;
+  document.getElementById('scorePercent').textContent = `${pct}%`;
+  document.getElementById('bkEasy').textContent = `${byDifficulty.Easy.correct}/${byDifficulty.Easy.total}`;
+  document.getElementById('bkMedium').textContent = `${byDifficulty.Medium.correct}/${byDifficulty.Medium.total}`;
+  document.getElementById('bkHard').textContent = `${byDifficulty.Hard.correct}/${byDifficulty.Hard.total}`;
+
+  let headline, msg;
+  if(pct === 100){
+    headline = "Congratulations — a perfect score.";
+    msg = "You've nailed the Week 1 concepts, from age definitions through to Bronfenbrenner's systems and trauma-informed practice. Solid foundation for the rest of COS307.";
+  } else if(pct >= 80){
+    headline = "Congratulations — strong result.";
+    msg = "You've got a firm handle on this week's key concepts and definitions. Worth a quick look back at any missed items before moving on.";
+  } else if(pct >= 50){
+    headline = "Nice work getting through it.";
+    msg = "You're building a solid base. Revisit the sections on family systems, Bronfenbrenner's model, and trauma-informed practice, then give it another go.";
+  } else {
+    headline = "You've completed the quiz.";
+    msg = "This week covers a lot of ground. Reread the Week 1 materials, especially the definitions and the Bronfenbrenner and trauma-informed practice frameworks, then retake the quiz to check your understanding.";
+  }
+  document.getElementById('resultsHeadline').textContent = headline;
+  document.getElementById('resultsMsg').textContent = msg;
+}
+
+function resetQuiz(){
+  current = 0;
+  score = 0;
+  answered = new Array(QUESTIONS.length).fill(false);
+  Object.keys(byDifficulty).forEach(k => byDifficulty[k].correct = 0);
+  resultsCard.classList.remove('show');
+  quizCard.classList.remove('hidden');
+  renderQuestion();
+}
+
+document.getElementById('retestBtn').addEventListener('click', resetQuiz);
+
+renderQuestion();
+</script>
+
+</body>
+</html>
