@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COS 307 Advanced Skills in Child Protection and Family · Week 2 Reflective Quiz</title>
+<style>
+  :root{
+    --ink: #201113;
+    --ink-soft: #3A1B20;
+    --paper: #F3EFE6;
+    --paper-dim: #E7E0D0;
+    --gold: #C4444C;
+    --gold-deep: #7C1F2A;
+    --sage: #6F9A72;
+    --coral: #B08A3E;
+    --line: rgba(32,17,19,0.14);
+    --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --font-body: "Charter", "Georgia", "Iowan Old Style", serif;
+    --font-mono: "Courier New", Courier, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-body);
+    min-height: 100vh;
+  }
+
+  body{
+    display:flex;
+    justify-content:center;
+    padding: 40px 16px 80px;
+  }
+
+  .stage{
+    width:100%;
+    max-width: 720px;
+  }
+
+  /* ---------- Header ---------- */
+  .masthead{
+    border-bottom: 1px solid rgba(243,239,230,0.18);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+  .eyebrow{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 8px;
+  }
+  .masthead h1{
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(28px, 5vw, 38px);
+    line-height: 1.15;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .masthead p{
+    margin:0;
+    color: rgba(243,239,230,0.65);
+    font-size: 15px;
+  }
+
+  /* ---------- Progress ---------- */
+  .progress-row{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    margin-bottom: 30px;
+  }
+  .progress-track{
+    flex:1;
+    height: 3px;
+    background: rgba(243,239,230,0.16);
+    position: relative;
+    overflow:hidden;
+  }
+  .progress-fill{
+    position:absolute;
+    left:0; top:0; bottom:0;
+    background: var(--gold);
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+  .progress-label{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: rgba(243,239,230,0.6);
+    white-space: nowrap;
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 2px;
+    padding: 34px 32px 30px;
+    position:relative;
+    box-shadow: 0 22px 50px rgba(0,0,0,0.35);
+  }
+
+  .q-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom: 18px;
+  }
+  .q-number{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+  }
+  .q-difficulty{
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid var(--ink);
+    opacity: 0.55;
+    white-space: nowrap;
+  }
+
+  .q-prompt{
+    font-family: var(--font-display);
+    font-size: clamp(19px, 3.2vw, 23px);
+    line-height: 1.4;
+    margin: 0 0 22px;
+  }
+
+  .q-section-label{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gold-deep);
+    margin: -8px 0 14px;
+  }
+
+  /* Options: MCQ / TF */
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .opt{
+    display:flex;
+    align-items:flex-start;
+    gap: 12px;
+    text-align:left;
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 13px 16px;
+    font-family: var(--font-body);
+    font-size: 15.5px;
+    line-height: 1.45;
+    color: var(--ink);
+    cursor:pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .opt:hover:not(:disabled){
+    border-color: var(--gold-deep);
+    background: rgba(211,162,74,0.08);
+  }
+  .opt .tag{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--gold-deep);
+    flex-shrink:0;
+    width: 16px;
+  }
+  .opt:disabled{ cursor:default; }
+  .opt.correct{
+    border-color: var(--sage);
+    background: rgba(111,154,114,0.14);
+  }
+  .opt.correct .tag{ color: var(--sage); }
+  .opt.incorrect{
+    border-color: var(--coral);
+    background: rgba(197,106,94,0.12);
+  }
+  .opt.incorrect .tag{ color: var(--coral); }
+  .opt.faded{ opacity: 0.45; }
+
+  /* Matching (kept for template parity, unused in this bank) */
+  .match-rows{
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .match-row{
+    display:grid;
+    grid-template-columns: 1fr 108px;
+    gap: 14px;
+    align-items:center;
+    border-bottom: 1px dashed var(--line);
+    padding-bottom: 10px;
+  }
+  .match-row .left-item{
+    font-size: 14.5px;
+    line-height: 1.4;
+  }
+  .match-row .left-item b{
+    font-family: var(--font-mono);
+    color: var(--gold-deep);
+    margin-right: 6px;
+  }
+  .match-row select{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    padding: 8px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 2px;
+  }
+  .match-row select:disabled{ opacity: 0.7; }
+  .match-key{
+    font-size: 13px;
+    color: rgba(23,34,43,0.7);
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+  .match-row.row-correct select{ border-color: var(--sage); }
+  .match-row.row-incorrect select{ border-color: var(--coral); }
+  .row-mark{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    margin-left: 8px;
+  }
+  .row-mark.ok{ color: var(--sage); }
+  .row-mark.bad{ color: var(--coral); }
+
+  /* Feedback */
+  .feedback{
+    display:none;
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-left: 3px solid var(--sage);
+    background: rgba(111,154,114,0.08);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .feedback.show{ display:block; }
+  .feedback.wrong{
+    border-left-color: var(--coral);
+    background: rgba(197,106,94,0.07);
+  }
+  .feedback .verdict{
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+    font-weight:bold;
+    display:block;
+    margin-bottom: 6px;
+  }
+  .feedback.wrong .verdict{ color: var(--coral); }
+  .feedback:not(.wrong) .verdict{ color: var(--sage); }
+
+  /* Buttons */
+  .actions{
+    display:flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  .btn{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    cursor:pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .btn:hover{ background: var(--ink-soft); }
+  .btn:active{ transform: translateY(1px); }
+  .btn:disabled{
+    opacity: 0.3;
+    cursor:not-allowed;
+  }
+  .btn.gold{
+    background: var(--gold-deep);
+    color: var(--ink);
+  }
+  .btn.gold:hover{ background: var(--gold); }
+  .check-btn{
+    display:flex;
+    justify-content:flex-end;
+    margin-top: 4px;
+  }
+
+  /* Results */
+  .results{
+    display:none;
+    text-align:center;
+    padding: 56px 32px 46px;
+  }
+  .results.show{ display:block; }
+  .results .badge{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 14px;
+  }
+  .results h2{
+    font-family: var(--font-display);
+    font-size: clamp(30px, 6vw, 42px);
+    margin: 0 0 10px;
+    font-weight: 400;
+  }
+  .results .score-big{
+    font-family: var(--font-display);
+    font-size: 64px;
+    color: var(--gold-deep);
+    margin: 18px 0 4px;
+    line-height:1;
+  }
+  .results .score-sub{
+    font-size: 14px;
+    color: rgba(23,34,43,0.65);
+    margin-bottom: 30px;
+  }
+  .results .msg{
+    max-width: 460px;
+    margin: 0 auto 32px;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: rgba(23,34,43,0.85);
+  }
+  .breakdown{
+    display:flex;
+    justify-content:center;
+    gap: 28px;
+    margin-bottom: 34px;
+    flex-wrap: wrap;
+  }
+  .breakdown div{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(23,34,43,0.55);
+  }
+  .breakdown strong{
+    display:block;
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .copyright{
+    text-align:center;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    color: rgba(243,239,230,0.4);
+    margin-top: 36px;
+  }
+
+  .hidden{ display:none !important; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; }
+  }
+
+  @media (max-width: 480px){
+    .card{ padding: 26px 20px 24px; }
+    .match-row{ grid-template-columns: 1fr; }
+    .match-row select{ width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="masthead">
+    <p class="eyebrow">COS 307 &middot; Advanced Skills in Child Protection and Family</p>
+    <h1>Week 2 Reflective Quiz</h1>
+    <p>Definition, prevalence, causes &amp; consequences of child abuse and neglect — 15 questions, instant feedback on each.</p>
+  </div>
+
+  <div class="progress-row">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">Question 1 of 15</div>
+  </div>
+
+  <div class="card" id="quizCard">
+    <!-- question content injected here -->
+  </div>
+
+  <div class="card results" id="resultsCard">
+    <p class="badge">Quiz Complete</p>
+    <h2 id="resultsHeadline">Well done.</h2>
+    <div class="score-big" id="scoreBig">0/15</div>
+    <div class="score-sub" id="scorePercent">0%</div>
+    <div class="breakdown">
+      <div><strong id="bkIntermediate">0/0</strong>Intermediate</div>
+      <div><strong id="bkUpperIntermediate">0/0</strong>Upper Int.</div>
+      <div><strong id="bkAdvanced">0/0</strong>Advanced</div>
+    </div>
+    <p class="msg" id="resultsMsg"></p>
+    <button class="btn gold" id="retestBtn">Retake the Quiz</button>
+  </div>
+
+  <p class="copyright">&copy; Kham Tran &middot; COS 307 Advanced Skills in Child Protection and Family</p>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    type: "mcq", difficulty: "Intermediate",
+    prompt: "Based on Australian childhood abuse data, which of the following statistics correctly deconstructs the traditional \u201cStranger Danger\u201d safety myth?",
+    options: [
+      { tag: "A", text: "Approximately 25% of child abuse perpetrators are strangers to the victim." },
+      { tag: "B", text: "Around 50% of abuse incidents occur within a child\u2019s home environment." },
+      { tag: "C", text: "A staggering 95% of perpetrators are individuals known to the child." },
+      { tag: "D", text: "Less than 10% of physical abuse cases involve a family member." }
+    ],
+    correct: "C",
+    grounding: "95% of child abuse perpetrators are individuals known to the child, including family members, relatives, trusted family friends, or professionals in positions of authority \u2014 shifting risk assessment and safety education away from strangers and toward known circles."
+  },
+  {
+    type: "mcq", difficulty: "Intermediate",
+    prompt: "Under the definitions of emotional abuse provided in the course material, \u201crejecting\u201d is specifically defined as a situation where:",
+    options: [
+      { tag: "A", text: "The adult verbally assaults the child, bullies them, and creates a hostile climate of fear." },
+      { tag: "B", text: "The adult deprives the child of essential stimulation, stifling emotional and intellectual growth." },
+      { tag: "C", text: "The adult cuts the child off from normal social experiences and prevents them from making friends." },
+      { tag: "D", text: "The adult refuses to acknowledge the child\u2019s worth and the legitimacy of the child's needs." }
+    ],
+    correct: "D",
+    grounding: "\u201cRejecting\u201d is when the adult refuses to acknowledge the child's worth and the legitimacy of their needs. A defines \u201cterrorising,\u201d B defines \u201cignoring,\u201d and C defines \u201cisolating.\u201d"
+  },
+  {
+    type: "mcq", difficulty: "Intermediate",
+    prompt: "In the context of emotional maltreatment, when an adult deliberately cuts a child off from normal social experiences, prevents them from forming friendships, and makes them believe they are entirely alone in the world, which subtype of emotional abuse is occurring?",
+    options: [
+      { tag: "A", text: "Isolating" },
+      { tag: "B", text: "Rejecting" },
+      { tag: "C", text: "Ignoring" },
+      { tag: "D", text: "Terrorising" }
+    ],
+    correct: "A",
+    grounding: "\u201cIsolating\u201d is the act of cutting a child off from normal social experiences, preventing friendships, and making the child feel entirely alone."
+  },
+  {
+    type: "mcq", difficulty: "Intermediate",
+    prompt: "Which subtype of emotional abuse is characterized by an adult verbally assaulting, bullying, and frightening a child, thereby creating an active climate of fear that makes the child believe the world is entirely hostile?",
+    options: [
+      { tag: "A", text: "Ignoring" },
+      { tag: "B", text: "Terrorising" },
+      { tag: "C", text: "Rejecting" },
+      { tag: "D", text: "Isolating" }
+    ],
+    correct: "B",
+    grounding: "\u201cTerrorising\u201d occurs when an adult verbally assaults, bullies and frightens a child, creating a climate of fear that leads the child to perceive the world as hostile."
+  },
+  {
+    type: "mcq", difficulty: "Intermediate",
+    prompt: "When an adult deprives a child of essential stimulation and responsiveness, thereby stifling the child's emotional growth and intellectual development, the adult is engaging in:",
+    options: [
+      { tag: "A", text: "Rejecting" },
+      { tag: "B", text: "Isolating" },
+      { tag: "C", text: "Terrorising" },
+      { tag: "D", text: "Ignoring" }
+    ],
+    correct: "D",
+    grounding: "\u201cIgnoring\u201d is defined as depriving a child of essential stimulation and responsiveness, directly stifling emotional growth and intellectual development."
+  },
+  {
+    type: "mcq", difficulty: "Upper Intermediate",
+    prompt: "Across different Australian jurisdictions, laws regarding parental responsibility for basic needs are drafted differently. In New South Wales and Queensland, the criminal offense of failing to provide basic needs (such as food, accommodation, and healthcare) specifically relates to a child under what age?",
+    options: [
+      { tag: "A", text: "Under two years" },
+      { tag: "B", text: "Under seven years" },
+      { tag: "C", text: "Under ten years" },
+      { tag: "D", text: "Under sixteen years" }
+    ],
+    correct: "B",
+    grounding: "In NSW and Queensland, the statutory offense of failing to provide a child with basic needs specifically applies to a child under the age of seven years."
+  },
+  {
+    type: "mcq", difficulty: "Upper Intermediate",
+    prompt: "In the Northern Territory, the statutory offense of a parent failing to provide basic needs (accommodation, food, education, healthcare) specifically applies to a child under what age?",
+    options: [
+      { tag: "A", text: "Under two years" },
+      { tag: "B", text: "Under five years" },
+      { tag: "C", text: "Under seven years" },
+      { tag: "D", text: "Under twelve years" }
+    ],
+    correct: "A",
+    grounding: "Northern Territory legislation specifies that the offense of a parent failing to provide basic needs applies to children under two years of age."
+  },
+  {
+    type: "mcq", difficulty: "Upper Intermediate",
+    prompt: "Under the category of additional forms of child abuse and neglect explored in this unit, \u201cfetal abuse\u201d is best defined as:",
+    options: [
+      { tag: "A", text: "Failing to obtain childhood immunisations prior to school enrollment." },
+      { tag: "B", text: "Medical negligence during active labor in a hospital setting." },
+      { tag: "C", text: "Harm or risk of harm placed on an unborn baby as a result of maternal drug or alcohol use." },
+      { tag: "D", text: "Restricting a mother's movement or access to prenatal medical checkups." }
+    ],
+    correct: "C",
+    grounding: "Fetal abuse is defined as unborn babies who are harmed or placed at risk of harm as a result of maternal drug or alcohol use."
+  },
+  {
+    type: "mcq", difficulty: "Upper Intermediate",
+    prompt: "How is \u201cexposure to family, domestic, and sexual violence (FDSV)\u201d defined for children and young people within Australian child welfare frameworks?",
+    options: [
+      { tag: "A", text: "Occurring only when a child is physically caught in the crossfire of parental fighting." },
+      { tag: "B", text: "Occurring when a child is exposed to obvious and/or subtle acts of violence directed at people around them, most commonly someone they live with." },
+      { tag: "C", text: "Occurring when a child is removed from their home and placed in an abusive foster environment." },
+      { tag: "D", text: "Occurring exclusively when a child is physically abused by a parental figure." }
+    ],
+    correct: "B",
+    grounding: "Exposure to FDSV occurs when children are exposed to obvious and/or subtle acts of violence directed at those around them, most commonly a cohabitant such as a parent."
+  },
+  {
+    type: "mcq", difficulty: "Upper Intermediate",
+    prompt: "Empirical research shows that childhood sexual abuse is significantly associated with diagnoses of lifetime mental health disorders. Which of the following sets of diagnoses is supported by empirical findings?",
+    options: [
+      { tag: "A", text: "Major depressive disorder, alcohol use disorder, generalised anxiety disorder, and post-traumatic stress disorder." },
+      { tag: "B", text: "Borderline personality disorder, childhood obesity, bipolar disorder, and schizophrenia." },
+      { tag: "C", text: "Attention-deficit/hyperactivity disorder, oppositional defiant disorder, and intellectual delay." },
+      { tag: "D", text: "Acute panic disorder, chronic insomnia, sleep apnea, and learning disabilities." }
+    ],
+    correct: "A",
+    grounding: "Empirical research associates child sexual abuse with diagnoses of lifetime major depressive disorder, alcohol use disorder, generalised anxiety disorder, and post-traumatic stress disorder."
+  },
+  {
+    type: "mcq", difficulty: "Upper Intermediate",
+    prompt: "Which of the following are cited in this unit as historical and contemporary examples of \u201cstate-sanctioned abuse\u201d?",
+    options: [
+      { tag: "A", text: "Fetal alcohol spectrum disorders and community gun violence." },
+      { tag: "B", text: "Institutional abuse in local sporting clubs and religious groups." },
+      { tag: "C", text: "Female genital mutilation in parts of Africa and the Stolen Generations in Australia." },
+      { tag: "D", text: "Educational neglect and lack of school funding in rural locations." }
+    ],
+    correct: "C",
+    grounding: "The source material lists female genital mutilation in parts of Africa and the Stolen Generations in Australia under the category of state-sanctioned abuse."
+  },
+  {
+    type: "mcq", difficulty: "Upper Intermediate",
+    prompt: "When documenting a child's verbal disclosure of physical or sexual abuse, what is considered the \u201cbest practice\u201d standard for child protection records?",
+    options: [
+      { tag: "A", text: "Synthesizing the child's words into professional, academic clinical terms." },
+      { tag: "B", text: "Recording the child's exact words rather than interpreting their statements." },
+      { tag: "C", text: "Waiting until the end of the workweek to compile all disclosures into a single summary report." },
+      { tag: "D", text: "Translating the child's informal language into statutory legislative indicators." }
+    ],
+    correct: "B",
+    grounding: "Best practice requires that workers record the child's exact words rather than interpreting their statements, ensuring accurate, non-biased documentation."
+  },
+  {
+    type: "mcq", difficulty: "Advanced",
+    prompt: "A child protection worker is assessing a case where a migrant father has beaten his 13-year-old son for poor school performance, leaving visible welt marks and bruises on his arms. Under the 3-part analytical framework for assessing cultural practices and harm, how must this situation be handled?",
+    options: [
+      { tag: "A", text: "It should be classified as \u201cCultural Difference\u201d because beating children for academic performance is viewed as loving correction in some contexts." },
+      { tag: "B", text: "The practice is protected under cultural justification because the father's primary intent was to motivate the child to succeed at school." },
+      { tag: "C", text: "While the meaning of the discipline must be explored, physical punishment causing visible injury crosses the statutory threshold of \u201cHarm,\u201d which is non-negotiable and cannot be overridden by cultural justifications." },
+      { tag: "D", text: "The worker must delay statutory intervention until a cultural consultant confirms that the family's country of origin prohibits physical smacking." }
+    ],
+    correct: "C",
+    grounding: "Under the 3-part framework, visible injury falls under \u201cHarm.\u201d While cultural parenting norms can vary, physical punishment causing injury crosses non-negotiable statutory thresholds \u2014 cultural explanations never override a practitioner's statutory duty to protect children."
+  },
+  {
+    type: "mcq", difficulty: "Advanced",
+    prompt: "In what way must the empirical statistic that 95% of child abuse perpetrators are known to the child actively shape a community worker's risk assessment and safety planning at the family level?",
+    options: [
+      { tag: "A", text: "It requires practitioners to validate children's feelings of confusion regarding \u201cknown\u201d adults and prioritize identifying \u201cSafe Adults\u201d within their existing family and community network." },
+      { tag: "B", text: "It directs practitioners to ignore stranger safety warnings in organizational settings and focus only on maternal parenting capacity." },
+      { tag: "C", text: "It mandates that all male relatives be automatically excluded from children's safety circles during a family service intervention." },
+      { tag: "D", text: "It indicates that children's disclosures regarding trusted family friends should be treated as minor and referred to family counseling rather than statutory departments." }
+    ],
+    correct: "A",
+    grounding: "Knowing that 95% of perpetrators are known to the child requires practitioners to validate feelings of confusion regarding known adults and focus safety planning on identifying \u201cSafe Adults\u201d within the child's family and social networks."
+  },
+  {
+    type: "mcq", difficulty: "Advanced",
+    prompt: "When applying a trauma-informed lens to children experiencing maltreatment, how should practitioners analyze complex behaviors such as extreme withdrawal, selective mutism, or hyper-vigilance?",
+    options: [
+      { tag: "A", text: "These behaviors are indicators of \u201cnon-compliance\u201d and should be managed with behavior modification plans." },
+      { tag: "B", text: "These are purely individual biological disorders requiring immediate psychiatric pharmaceutical interventions." },
+      { tag: "C", text: "These behaviors are typical developmental delays associated with low socio-economic status and should be ignored during safety planning." },
+      { tag: "D", text: "These behaviors should be recognized as potentially being functional survival and coping mechanisms developed to manage overwhelming trauma." }
+    ],
+    correct: "D",
+    grounding: "Trauma-informed practice requires practitioners to recognize that behaviors like extreme withdrawal, aggression, or selective mutism are often survival mechanisms and traumatic reactions rather than deliberate \u201cnon-compliance\u201d or isolated behavioral issues."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = new Array(QUESTIONS.length).fill(false);
+const byDifficulty = { "Intermediate": {correct:0,total:0}, "Upper Intermediate": {correct:0,total:0}, "Advanced": {correct:0,total:0} };
+QUESTIONS.forEach(q => byDifficulty[q.difficulty].total++);
+
+const quizCard = document.getElementById('quizCard');
+const progressFill = document.getElementById('progressFill');
+const progressLabel = document.getElementById('progressLabel');
+const resultsCard = document.getElementById('resultsCard');
+
+function updateProgress(){
+  const pct = (current / QUESTIONS.length) * 100;
+  progressFill.style.width = pct + '%';
+  progressLabel.textContent = `Question ${Math.min(current+1, QUESTIONS.length)} of ${QUESTIONS.length}`;
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  updateProgress();
+  let html = `
+    <div class="q-meta">
+      <span class="q-number">Question ${current+1} / ${QUESTIONS.length}</span>
+      <span class="q-difficulty">${q.difficulty}</span>
+    </div>
+    <p class="q-prompt">${q.prompt}</p>
+  `;
+
+  if(q.type === 'mcq'){
+    html += '<div class="options" id="optionsWrap">';
+    q.options.forEach(opt => {
+      html += `<button class="opt" data-tag="${opt.tag}"><span class="tag">${opt.tag}</span><span>${opt.text}</span></button>`;
+    });
+    html += '</div>';
+  } else if(q.type === 'tf'){
+    html += '<div class="options" id="optionsWrap">';
+    ['True','False'].forEach(v => {
+      html += `<button class="opt" data-tag="${v}"><span class="tag">${v==='True'?'T':'F'}</span><span>${v}</span></button>`;
+    });
+    html += '</div>';
+  } else if(q.type === 'matching'){
+    html += `<p class="match-key">${q.keyText}</p>`;
+    html += '<div class="match-rows" id="matchRows">';
+    q.left.forEach(item => {
+      let opts = q.options.map(o => `<option value="${o}">${o}</option>`).join('');
+      html += `
+        <div class="match-row" data-num="${item.num}">
+          <div class="left-item"><b>${item.num}.</b>${item.label}</div>
+          <select>
+            <option value="">Select…</option>
+            ${opts}
+          </select>
+        </div>`;
+    });
+    html += '</div>';
+    html += '<div class="check-btn"><button class="btn" id="checkMatchBtn">Check Matches</button></div>';
+  }
+
+  html += `<div class="feedback" id="feedback"></div>`;
+  html += `<div class="actions"><button class="btn gold" id="nextBtn" disabled>Next Question</button></div>`;
+
+  quizCard.innerHTML = html;
+  attachHandlers(q);
+}
+
+function attachHandlers(q){
+  const feedback = document.getElementById('feedback');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function showFeedback(isCorrect, groundingText){
+    feedback.classList.add('show');
+    feedback.classList.toggle('wrong', !isCorrect);
+    feedback.innerHTML = `<span class="verdict">${isCorrect ? 'Correct' : 'Not quite'}</span>${groundingText}`;
+    nextBtn.disabled = false;
+    if(!answered[current]){
+      answered[current] = true;
+      if(isCorrect){
+        score++;
+        byDifficulty[q.difficulty].correct++;
+      }
+    }
+  }
+
+  if(q.type === 'mcq' || q.type === 'tf'){
+    const buttons = document.querySelectorAll('#optionsWrap .opt');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const chosen = btn.dataset.tag;
+        const isCorrect = chosen === q.correct;
+        buttons.forEach(b => {
+          b.disabled = true;
+          if(b.dataset.tag === q.correct){
+            b.classList.add('correct');
+          } else if(b === btn){
+            b.classList.add('incorrect');
+          } else {
+            b.classList.add('faded');
+          }
+        });
+        showFeedback(isCorrect, q.grounding);
+      });
+    });
+  }
+
+  if(q.type === 'matching'){
+    const checkBtn = document.getElementById('checkMatchBtn');
+    checkBtn.addEventListener('click', () => {
+      const rows = document.querySelectorAll('#matchRows .match-row');
+      let allFilled = true;
+      let correctCount = 0;
+      rows.forEach(row => {
+        const select = row.querySelector('select');
+        if(!select.value){ allFilled = false; }
+      });
+      if(!allFilled){
+        feedback.classList.add('show');
+        feedback.classList.add('wrong');
+        feedback.innerHTML = `<span class="verdict">Almost there</span>Please make a selection for every item before checking.`;
+        return;
+      }
+      rows.forEach(row => {
+        const num = row.dataset.num;
+        const select = row.querySelector('select');
+        select.disabled = true;
+        const isRowCorrect = select.value === q.correctMap[num];
+        row.classList.add(isRowCorrect ? 'row-correct' : 'row-incorrect');
+        const mark = document.createElement('span');
+        mark.className = 'row-mark ' + (isRowCorrect ? 'ok' : 'bad');
+        mark.textContent = isRowCorrect ? '\u2713' : `\u2717 (${q.correctMap[num]})`;
+        row.querySelector('.left-item').appendChild(mark);
+        if(isRowCorrect) correctCount++;
+      });
+      checkBtn.disabled = true;
+      const allCorrect = correctCount === rows.length;
+      showFeedback(allCorrect, `You matched ${correctCount} of ${rows.length} correctly. ${q.grounding}`);
+    });
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if(current < QUESTIONS.length - 1){
+      current++;
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  });
+}
+
+function showResults(){
+  updateProgress();
+  progressFill.style.width = '100%';
+  progressLabel.textContent = `Quiz complete`;
+  quizCard.classList.add('hidden');
+  resultsCard.classList.add('show');
+
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  document.getElementById('scoreBig').textContent = `${score}/${QUESTIONS.length}`;
+  document.getElementById('scorePercent').textContent = `${pct}%`;
+  document.getElementById('bkIntermediate').textContent = `${byDifficulty["Intermediate"].correct}/${byDifficulty["Intermediate"].total}`;
+  document.getElementById('bkUpperIntermediate').textContent = `${byDifficulty["Upper Intermediate"].correct}/${byDifficulty["Upper Intermediate"].total}`;
+  document.getElementById('bkAdvanced').textContent = `${byDifficulty["Advanced"].correct}/${byDifficulty["Advanced"].total}`;
+
+  let headline, msg;
+  if(pct === 100){
+    headline = "Congratulations — a perfect score.";
+    msg = "You've nailed Week 2 — from the known-perpetrator statistics through to the subtypes of emotional abuse, jurisdictional neglect thresholds, and the cultural-harm framework. Strong grasp of the material.";
+  } else if(pct >= 80){
+    headline = "Congratulations — strong result.";
+    msg = "You've got a firm handle on this week's prevalence data, definitions, and frameworks. Worth a quick look back at any missed items before moving on.";
+  } else if(pct >= 50){
+    headline = "Nice work getting through it.";
+    msg = "You're building a solid base. Revisit the emotional abuse subtypes, jurisdictional neglect ages, and the 3-part cultural-harm framework, then give it another go.";
+  } else {
+    headline = "You've completed the quiz.";
+    msg = "This week covers a lot of ground. Reread the Week 2 materials, especially the perpetrator statistics, emotional abuse definitions, and the cultural-harm and trauma-informed frameworks, then retake the quiz to check your understanding.";
+  }
+  document.getElementById('resultsHeadline').textContent = headline;
+  document.getElementById('resultsMsg').textContent = msg;
+}
+
+function resetQuiz(){
+  current = 0;
+  score = 0;
+  answered = new Array(QUESTIONS.length).fill(false);
+  Object.keys(byDifficulty).forEach(k => byDifficulty[k].correct = 0);
+  resultsCard.classList.remove('show');
+  quizCard.classList.remove('hidden');
+  renderQuestion();
+}
+
+document.getElementById('retestBtn').addEventListener('click', resetQuiz);
+
+renderQuestion();
+</script>
+
+</body>
+</html>
