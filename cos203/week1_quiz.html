@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COS203 — Week 1 Review Quiz</title>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card: #ffffff;
+    --ink: #1c1f26;
+    --muted: #6b7280;
+    --accent: #0b2545;
+    --accent-dark: #071a33;
+    --gold: #c8a24a;
+    --correct: #1a9e5c;
+    --correct-bg: #e6f7ee;
+    --incorrect: #d0392b;
+    --incorrect-bg: #fbe9e7;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px 64px;
+  }
+  .wrap { width: 100%; max-width: 680px; }
+
+  header {
+    margin-bottom: 24px;
+  }
+  header .eyebrow {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
+  header h1 {
+    margin: 4px 0 6px;
+    font-size: 28px;
+  }
+  header p {
+    color: var(--muted);
+    margin: 0;
+    font-size: 15px;
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin: 20px 0;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.35s ease;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .question-text {
+    font-size: 19px;
+    font-weight: 650;
+    line-height: 1.4;
+    margin: 0 0 20px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    text-align: left;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    border-radius: 12px;
+    font-size: 15.5px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+    color: var(--ink);
+  }
+  .option:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #eef1f6;
+  }
+  .option:active:not(:disabled) { transform: scale(0.995); }
+  .option .letter {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .option:disabled { cursor: default; }
+
+  .option.correct {
+    border-color: var(--correct);
+    background: var(--correct-bg);
+  }
+  .option.correct .letter { background: var(--correct); color: #fff; }
+
+  .option.incorrect {
+    border-color: var(--incorrect);
+    background: var(--incorrect-bg);
+  }
+  .option.incorrect .letter { background: var(--incorrect); color: #fff; }
+
+  .option.dim { opacity: 0.55; }
+
+  .explanation {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 12px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    display: none;
+  }
+  .explanation.show { display: block; animation: fadeIn 0.25s ease; }
+  .explanation.right { background: var(--correct-bg); border: 1px solid #bfe8d3; }
+  .explanation.wrong { background: var(--incorrect-bg); border: 1px solid #f3c9c4; }
+  .explanation .verdict {
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .explanation.right .verdict { color: var(--correct); }
+  .explanation.wrong .verdict { color: var(--incorrect); }
+  .explanation .body { color: var(--ink); }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .nav-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+  }
+  button.next-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 650;
+    cursor: pointer;
+    display: none;
+    transition: background 0.15s ease;
+  }
+  button.next-btn:hover { background: var(--accent-dark); }
+  button.next-btn.show { display: inline-block; }
+
+  /* Results screen */
+  .results { text-align: center; padding: 40px 28px; }
+  .results .score {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 8px 0 4px;
+  }
+  .results .score-label {
+    color: var(--muted);
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
+  .results .msg {
+    font-size: 16px;
+    margin-bottom: 28px;
+  }
+  button.restart-btn {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent);
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 650;
+    cursor: pointer;
+  }
+  button.restart-btn:hover { background: #eef1f6; }
+
+  .hidden { display: none !important; }
+
+  footer.site-footer {
+    margin-top: 36px;
+    padding-top: 18px;
+    border-top: 2px solid var(--gold);
+    text-align: center;
+    color: var(--accent);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+  footer.site-footer .footer-line {
+    font-weight: 650;
+  }
+  footer.site-footer .footer-sep {
+    color: var(--gold);
+    margin: 0 6px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">COS203</div>
+    <h1>Week 1 — Review Quiz</h1>
+    <p>Test your understanding of research and user experience in community services. Tap an answer to see if you're right, with an explanation below.</p>
+  </header>
+
+  <div id="quiz-view">
+    <div class="meta-row">
+      <span id="q-counter">Question 1 of 12</span>
+      <span id="q-score">Score: 0</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <div class="card">
+      <p class="question-text" id="question-text"></p>
+      <div class="options" id="options"></div>
+      <div class="explanation" id="explanation">
+        <div class="verdict" id="verdict"></div>
+        <div class="body" id="explanation-body"></div>
+      </div>
+      <div class="nav-row">
+        <button class="next-btn" id="next-btn">Next question →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="results-view" class="hidden">
+    <div class="card results">
+      <div class="score-label">Your score</div>
+      <div class="score" id="final-score">0 / 12</div>
+      <div class="msg" id="final-msg"></div>
+      <button class="restart-btn" id="restart-btn">Retake quiz</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span class="footer-line">COS203</span><span class="footer-sep">|</span><span class="footer-line">Week 1</span><span class="footer-sep">|</span><span class="footer-line">@ Kham Tran</span>
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "What is the primary goal of conducting research in community services?",
+    options: [
+      "To standardize services across all communities",
+      "To gather data that informs service improvement and user experiences",
+      "To eliminate all community programs",
+      "To focus solely on economic factors"
+    ],
+    correct: 1,
+    explanation: "The primary goal of conducting research in community services is to gather data that informs service improvement and enhances user experiences, ensuring that services meet the needs of the community."
+  },
+  {
+    q: "Why is user feedback important in the development of community services?",
+    options: [
+      "It reduces the cost of services",
+      "It allows for top-down decision-making",
+      "It empowers service users and ensures services meet their needs",
+      "It eliminates the need for service evaluations"
+    ],
+    correct: 2,
+    explanation: "User feedback is crucial as it empowers service users by involving them in the development process, ensuring that services are tailored to their specific needs and preferences."
+  },
+  {
+    q: "Which of the following is a common barrier to effective service user experiences in community services?",
+    options: [
+      "High levels of education",
+      "Lack of awareness about available services",
+      "Abundant resources",
+      "Strong community networks"
+    ],
+    correct: 1,
+    explanation: "A lack of awareness about available services is a significant barrier that can hinder effective service user experiences, preventing individuals from accessing the support they need."
+  },
+  {
+    q: "What is an example of an evidence-based practice in researching community services?",
+    options: [
+      "Implementing a one-size-fits-all program",
+      "Utilizing qualitative research to understand user experiences",
+      "Ignoring user feedback",
+      "Focusing only on quantitative data"
+    ],
+    correct: 1,
+    explanation: "Utilizing qualitative research to understand user experiences is an example of an evidence-based practice that helps tailor community services to better meet the needs of users."
+  },
+  {
+    q: "How does historical context influence service user experiences in community services?",
+    options: [
+      "It has no impact on experiences",
+      "It fosters trust in community services",
+      "It can shape perceptions and expectations of services",
+      "It encourages participation in all services"
+    ],
+    correct: 2,
+    explanation: "Historical context can significantly shape perceptions and expectations of services, influencing how users engage with community services based on past experiences."
+  },
+  {
+    q: "What is a key component of user-centered research in community services?",
+    options: [
+      "Ignoring clients' feedback",
+      "Focusing solely on service provider perspectives",
+      "Actively involving service users in the research process",
+      "Providing services without user input"
+    ],
+    correct: 2,
+    explanation: "A key component of user-centered research is actively involving service users in the research process, which helps ensure that their experiences and needs are accurately represented."
+  },
+  {
+    q: "Which of the following strategies can help improve service user experiences in community services?",
+    options: [
+      "Reducing service availability",
+      "Increasing accessibility and support for users",
+      "Limiting user input",
+      "Standardizing all services"
+    ],
+    correct: 1,
+    explanation: "Increasing accessibility and support for users can significantly improve service user experiences, making it easier for individuals to engage with community services."
+  },
+  {
+    q: "What role does training in user experience play in community services?",
+    options: [
+      "It is unnecessary for service providers",
+      "It helps providers understand and respond to user needs",
+      "It focuses only on administrative tasks",
+      "It standardizes all service delivery"
+    ],
+    correct: 1,
+    explanation: "Training in user experience helps service providers understand and respond to user needs, which is essential for delivering effective and user-friendly community services."
+  },
+  {
+    q: "Which of the following best describes a user-friendly environment in community services?",
+    options: [
+      "A space that ignores user feedback",
+      "A space that respects and values user input and experiences",
+      "A space that is only accessible to certain groups",
+      "A space that prioritizes economic factors over user needs"
+    ],
+    correct: 1,
+    explanation: "A user-friendly environment is one that respects and values user input and experiences, making individuals feel welcomed and understood."
+  },
+  {
+    q: "What is the significance of integrating user experiences with service delivery research?",
+    options: [
+      "It enhances the relevance and acceptance of services among users",
+      "It ignores user feedback",
+      "It restricts services to certain groups",
+      "It prioritizes economic factors over user needs"
+    ],
+    correct: 0,
+    explanation: "Integrating user experiences with service delivery research enhances the relevance and acceptance of services among users, making them more effective and aligned with user needs."
+  },
+  {
+    q: "Which type of research is primarily concerned with understanding the experiences and perspectives of service users in community services?",
+    options: [
+      "Quantitative Research",
+      "Qualitative Research",
+      "Mixed-Methods Research",
+      "Experimental Research"
+    ],
+    correct: 1,
+    explanation: "Qualitative research is primarily concerned with understanding the experiences and perspectives of service users, often through interviews, focus groups, and open-ended surveys."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+const letters = ["A", "B", "C", "D"];
+
+const questionText = document.getElementById("question-text");
+const optionsEl = document.getElementById("options");
+const explanationEl = document.getElementById("explanation");
+const verdictEl = document.getElementById("verdict");
+const explanationBody = document.getElementById("explanation-body");
+const nextBtn = document.getElementById("next-btn");
+const qCounter = document.getElementById("q-counter");
+const qScore = document.getElementById("q-score");
+const progressFill = document.getElementById("progress-fill");
+const quizView = document.getElementById("quiz-view");
+const resultsView = document.getElementById("results-view");
+const finalScore = document.getElementById("final-score");
+const finalMsg = document.getElementById("final-msg");
+const restartBtn = document.getElementById("restart-btn");
+
+function renderQuestion() {
+  answered = false;
+  const item = questions[current];
+  questionText.textContent = item.q;
+  qCounter.textContent = `Question ${current + 1} of ${questions.length}`;
+  qScore.textContent = `Score: ${score}`;
+  progressFill.style.width = `${(current / questions.length) * 100}%`;
+
+  optionsEl.innerHTML = "";
+  item.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.addEventListener("click", () => selectAnswer(i, btn));
+    optionsEl.appendChild(btn);
+  });
+
+  explanationEl.classList.remove("show", "right", "wrong");
+  nextBtn.classList.remove("show");
+}
+
+function selectAnswer(index, btnEl) {
+  if (answered) return;
+  answered = true;
+
+  const item = questions[current];
+  const allButtons = optionsEl.querySelectorAll(".option");
+  allButtons.forEach((b) => b.disabled = true);
+
+  const isCorrect = index === item.correct;
+  if (isCorrect) score++;
+
+  allButtons.forEach((b, i) => {
+    if (i === item.correct) {
+      b.classList.add("correct");
+    } else if (i === index) {
+      b.classList.add("incorrect");
+    } else {
+      b.classList.add("dim");
+    }
+  });
+
+  verdictEl.textContent = isCorrect ? "✓ Correct" : "✗ Not quite";
+  explanationBody.textContent = item.explanation;
+  explanationEl.classList.add("show", isCorrect ? "right" : "wrong");
+
+  qScore.textContent = `Score: ${score}`;
+  nextBtn.classList.add("show");
+  nextBtn.textContent = current === questions.length - 1 ? "See results →" : "Next question →";
+}
+
+nextBtn.addEventListener("click", () => {
+  current++;
+  if (current >= questions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+});
+
+function showResults() {
+  progressFill.style.width = "100%";
+  quizView.classList.add("hidden");
+  resultsView.classList.remove("hidden");
+  finalScore.textContent = `${score} / ${questions.length}`;
+  const pct = Math.round((score / questions.length) * 100);
+  let msg;
+  if (pct === 100) msg = "Perfect score! You've got Week 1 down cold.";
+  else if (pct >= 80) msg = "Great work — a strong grasp of this week's material.";
+  else if (pct >= 50) msg = "Solid effort. Review the explanations above to lock it in.";
+  else msg = "Worth another pass through the Week 1 material — try again!";
+  finalMsg.textContent = msg;
+}
+
+restartBtn.addEventListener("click", () => {
+  current = 0;
+  score = 0;
+  resultsView.classList.add("hidden");
+  quizView.classList.remove("hidden");
+  renderQuestion();
+});
+
+renderQuestion();
+</script>
+</body>
+</html>
