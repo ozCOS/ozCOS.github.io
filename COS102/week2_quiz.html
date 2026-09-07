@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COS102 — Week 2 Quiz: Community Work</title>
+<style>
+  :root{
+    --ink:#152238;
+    --ink-2:#1f3454;
+    --paper:#EFEAE0;
+    --paper-2:#F8F5EE;
+    --gold:#9C7A2E;
+    --gold-light:#C9A24B;
+    --green:#3F6B4A;
+    --red:#9B3B3B;
+    --line: rgba(21,34,56,0.14);
+    --serif: "Source Serif Pro", "Georgia", serif;
+    --sans: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--ink);
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(201,162,75,0.10), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(201,162,75,0.06), transparent 45%);
+    color: var(--ink);
+    font-family: var(--sans);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding: 40px 16px 60px;
+  }
+
+  .sheet{ width:100%; max-width: 760px; }
+
+  .masthead{
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-top: 6px solid var(--gold);
+    padding: 28px 32px 22px;
+    position:relative;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  }
+  .masthead::after{
+    content:"";
+    position:absolute;
+    left:32px; right:32px; bottom:14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow{
+    font-family: var(--mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 11.5px;
+    color: var(--gold);
+    display:flex;
+    justify-content:space-between;
+    margin-bottom: 10px;
+  }
+  h1{
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(26px, 4vw, 34px);
+    margin: 0 0 6px;
+    color: var(--ink);
+    line-height:1.15;
+  }
+  .subtitle{ font-size: 14.5px; color: #4b5a72; margin: 0 0 18px; }
+
+  .progress-row{ display:flex; align-items:center; gap: 14px; margin-top: 18px; }
+  .progress-track{ flex:1; height: 6px; background: var(--line); border-radius: 3px; overflow:hidden; }
+  .progress-fill{ height:100%; background: linear-gradient(90deg, var(--gold-light), var(--gold)); width: 6.6%; transition: width .35s ease; }
+  .progress-label{ font-family: var(--mono); font-size: 12px; color:#4b5a72; white-space:nowrap; }
+
+  .card{
+    background: var(--paper);
+    border: 1px solid var(--line);
+    padding: 30px 32px 26px;
+    margin-top: 2px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  }
+
+  .tier{
+    display:inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    background: rgba(21,34,56,0.06);
+    border: 1px solid var(--line);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+    margin-right: 8px;
+  }
+
+  .q-number{ font-family: var(--serif); font-size: 15px; color: var(--gold); font-weight: 600; margin-bottom: 6px; }
+  .q-text{ font-family: var(--serif); font-size: 19px; line-height: 1.45; color: var(--ink); margin: 0 0 20px; white-space: pre-line; }
+
+  .options{ display:flex; flex-direction:column; gap: 10px; }
+
+  .option{
+    display:flex; align-items:flex-start; gap: 12px; text-align:left; width:100%;
+    background: var(--paper-2); border: 1px solid var(--line); padding: 14px 16px;
+    font-family: var(--sans); font-size: 15px; line-height:1.45; color: var(--ink);
+    cursor:pointer; transition: border-color .15s ease, background .15s ease, transform .1s ease;
+  }
+  .option:hover:not(.locked){ border-color: var(--gold); background: #fbf9f3; }
+  .option:active:not(.locked){ transform: translateY(1px); }
+  .option .letter{ font-family: var(--mono); font-weight: 600; color: var(--gold); flex-shrink:0; width: 18px; }
+  .option.correct{ border-color: var(--green); background: rgba(63,107,74,0.10); }
+  .option.correct .letter{ color: var(--green); }
+  .option.incorrect{ border-color: var(--red); background: rgba(155,59,59,0.08); }
+  .option.incorrect .letter{ color: var(--red); }
+  .option.locked{ cursor:default; }
+  .option.dim{ opacity:0.55; }
+
+  .feedback{
+    margin-top: 18px; padding: 16px 18px; border-left: 3px solid var(--gold);
+    background: var(--paper-2); font-size: 14.5px; line-height: 1.6; color: #2c3b52; display:none;
+  }
+  .feedback.show{ display:block; }
+  .feedback strong{ font-family: var(--serif); color: var(--ink); }
+  .feedback.wrong{ border-left-color: var(--red); }
+  .feedback.right{ border-left-color: var(--green); }
+
+  /* Reveal-style content (matching / case studies) */
+  .pairs-list{ list-style:none; margin:0 0 18px; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .pairs-list li{
+    background: var(--paper-2); border: 1px solid var(--line); padding: 12px 14px;
+    font-size: 14.5px; line-height:1.5; color: var(--ink);
+  }
+  .pairs-list li b{ font-family: var(--serif); color: var(--gold); }
+
+  .scenario-text{
+    font-family: var(--sans); font-size: 14.5px; line-height:1.7; color: #2c3b52;
+    background: var(--paper-2); border: 1px solid var(--line); padding: 16px 18px; margin-bottom: 16px;
+  }
+  .prompt-text{ font-family: var(--serif); font-size: 17px; line-height:1.5; color: var(--ink); margin: 0 0 18px; }
+
+  .reveal-btn{
+    font-family: var(--sans); font-size: 13.5px; padding: 11px 20px;
+    border: 1px solid var(--gold); background: transparent; color: var(--ink-2);
+    cursor:pointer; transition: background .15s ease, color .15s ease;
+  }
+  .reveal-btn:hover{ background: var(--gold); color: var(--paper-2); }
+
+  .model-answer{
+    margin-top: 18px; padding: 16px 18px; border-left: 3px solid var(--gold);
+    background: var(--paper-2); font-size: 14.5px; line-height: 1.65; color: #2c3b52; display:none;
+  }
+  .model-answer.show{ display:block; }
+  .model-answer strong{ font-family: var(--serif); color: var(--ink); display:block; margin-bottom:8px; }
+  .model-answer ul{ margin: 6px 0 0; padding-left: 18px; }
+  .model-answer li{ margin-bottom: 6px; }
+
+  .nav-row{ display:flex; justify-content:space-between; align-items:center; margin-top: 26px; }
+
+  button.nav-btn{
+    font-family: var(--sans); font-size: 13.5px; letter-spacing: 0.02em; padding: 11px 22px;
+    border: 1px solid var(--ink); background: var(--ink); color: var(--paper-2);
+    cursor:pointer; transition: background .15s ease, opacity .15s ease;
+  }
+  button.nav-btn:hover:not(:disabled){ background: var(--ink-2); }
+  button.nav-btn:disabled{ opacity:0.35; cursor:not-allowed; }
+  button.nav-btn.ghost{ background:transparent; color: var(--ink); border-color: var(--line); }
+  button.nav-btn.ghost:hover:not(:disabled){ border-color: var(--ink); }
+
+  .score-chip{ font-family: var(--mono); font-size: 12.5px; color: var(--ink-2); }
+
+  .results{ display:none; text-align:center; padding: 20px 0 6px; }
+  .results.show{ display:block; }
+  .results .score-caption{ font-family: var(--mono); font-size: 12.5px; letter-spacing:0.1em; text-transform:uppercase; color:#4b5a72; margin-bottom: 4px; }
+  .results .big-score{ font-family: var(--serif); font-size: 52px; color: var(--ink); margin: 6px 0 0; font-weight:600; }
+  .results .big-score span{ color: var(--gold); }
+  .results .score-sub{ font-family: var(--mono); font-size: 12px; color:#4b5a72; margin-top:4px; }
+  .results .verdict{ font-size: 15px; color: #2c3b52; margin: 18px auto 26px; max-width: 480px; line-height:1.6; }
+  .results-actions{ display:flex; gap: 12px; justify-content:center; }
+
+  .quiz-body{ display:block; }
+  .quiz-body.hide{ display:none; }
+
+  footer.note{
+    text-align:center; font-family: var(--mono); font-size: 11px;
+    color: rgba(239,234,224,0.5); margin-top: 22px; letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 480px){
+    .masthead, .card{ padding: 22px 18px; }
+    .q-text{ font-size: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <div class="masthead">
+    <div class="eyebrow">
+      <span>COS102 · Community Services</span>
+      <span id="tier-label">Section A</span>
+    </div>
+    <h1>Week 2 Quiz Review</h1>
+    <p class="subtitle">Community Work — definitions, values, and case-based practice.</p>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <div class="progress-label" id="progress-label">Q1 / 15</div>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <div class="quiz-body" id="quiz-body">
+      <div id="tags"></div>
+      <div class="q-number" id="q-number">Question 1</div>
+      <div id="q-content"></div>
+
+      <div class="nav-row">
+        <button class="nav-btn ghost" id="prev-btn">← Previous</button>
+        <span class="score-chip" id="score-chip">Score: 0 / 0 answered</span>
+        <button class="nav-btn" id="next-btn" disabled>Next →</button>
+      </div>
+    </div>
+
+    <div class="results" id="results">
+      <div class="score-caption">Final Result</div>
+      <p class="big-score"><span id="results-score">0</span>/9</p>
+      <p class="score-sub">Scored questions (MCQ &amp; True/False) · matching &amp; case studies reviewed separately</p>
+      <p class="verdict" id="results-verdict"></p>
+      <div class="results-actions">
+        <button class="nav-btn ghost" id="review-btn">Review from start</button>
+        <button class="nav-btn" id="restart-btn">Retake quiz</button>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="note">© Kham Tran · COS 102</footer>
+</div>
+
+<script>
+const letters = ['A','B','C','D'];
+
+const questions = [
+  { type:'mcq', tag:'Section A · MCQ',
+    q: "According to the United Nations (1948) framework, how is community development officially defined?",
+    options: [
+      "A top-down government scheme to distribute welfare payments to all citizens regardless of need.",
+      "A process designed to create conditions of economic and social progress for the entire community through active participation and full reliance on the community's initiative.",
+      "A business-led initiative focused on corporate-social partnerships to achieve environmental and economic sustainability.",
+      "A reactive safety-net model triggered only when the private market economy fails to provide self-sufficiency."
+    ],
+    correct: 1,
+    explanation: "The UN (1948) definition conceptualizes community development as a process designed to create economic and social progress through active participation and full reliance on the community's own initiative — emphasizing grassroots agency and self-reliance rather than passive receipt of top-down state benefits."
+  },
+  { type:'mcq', tag:'Section A · MCQ',
+    q: "In community service theory, Ferdinand Tönnies' classic concepts of Gemeinschaft and Gesellschaft are used to distinguish community social structures. Which of the following best describes Gemeinschaft?",
+    options: [
+      "A highly structured social institution or formal organization characterized by legal status and individualistic interest.",
+      "A small, closely-knit community where relationships are personal and based on collectivism rather than individualism.",
+      "A national public service program funded directly by the Commonwealth Government to address unemployment.",
+      "A temporary or fleeting crowd that forms in response to an immediate disaster or crisis."
+    ],
+    correct: 1,
+    explanation: "Tönnies' model contrasts Gemeinschaft (community) and Gesellschaft (society/association). Gemeinschaft is a traditional, small community where relationships are personal, face-to-face, and collective obligations override individualistic desires; Gesellschaft represents formal organizations where individualism and contractual relations predominate."
+  },
+  { type:'mcq', tag:'Section A · MCQ',
+    q: "According to the primary elements of a community outlined in the course materials, which of the following is considered the most fundamental trait without which a community cannot exist?",
+    options: [
+      "A formal written constitution and legal incorporation.",
+      "A fixed, unchangeable geographical territory or district boundaries.",
+      "A group of individuals (people) living and sharing a common life.",
+      "A government-appointed community advocate or welfare officer."
+    ],
+    correct: 2,
+    explanation: "The most fundamental trait of a community is a group of people. A community cannot exist without individuals living together, sharing a common life, and being united by a sense of community consciousness — territory and sentiment are built on this foundation."
+  },
+  { type:'mcq', tag:'Section A · MCQ',
+    q: "Jack Rothman (1999) and Meredith Minkler (2005) refer to community organization and community building. How do they generically characterize this process?",
+    options: [
+      "A process by which community groups are assisted in identifying common problems or goals, mobilizing resources, and developing and implementing strategies to reach their collectively set goals.",
+      "A method of clinical case management that focuses exclusively on individual psychological therapies.",
+      "An administrative system that evaluates and enforces mutual obligation compliance for welfare recipients.",
+      "A legal framework for establishing non-government organizations with strict corporate ties."
+    ],
+    correct: 0,
+    explanation: "Rothman and Minkler characterize community organization and building as a process of assisting groups to identify their common problems or goals, mobilize necessary resources, and develop/implement collaborative strategies to achieve those collectively set goals."
+  },
+  { type:'mcq', tag:'Section A · MCQ',
+    q: "The course material identifies 'social determinants of health' as an essential rationale for community work. What does this term encompass?",
+    options: [
+      "Clinical medical procedures, surgeries, and pharmaceutical drugs prescribed in hospital settings.",
+      "Biological factors and genetic traits that dictate an individual's physical development.",
+      "All social and economic elements that influence how long and how well individuals live that are not directly covered by the healthcare system, such as education, income levels, employment, and housing.",
+      "The formal codes of ethics governing the relationships between doctors, nurses, and their clients."
+    ],
+    correct: 2,
+    explanation: "Social determinants of health include all social, physical, and economic conditions influencing lifespan and wellbeing that are not direct clinical interventions — education quality, income, secure employment, and stable housing are key focus areas for community workers."
+  },
+  { type:'tf', tag:'Section B · True/False',
+    q: "In Australia, a community as an entity possesses no legal standing, meaning it has no legal rights, obligations, or statutory provisions, and is not the result of a statutory act.",
+    options: ["True", "False"],
+    correct: 0,
+    explanation: "True. Unlike legally incorporated bodies or formal statutory agencies, a natural community has no legal status in Australia — it holds no distinct legal rights or obligations, nor is it established via a specific statutory provision of government."
+  },
+  { type:'tf', tag:'Section B · True/False',
+    q: "According to the underpinning values of community work, 'empowerment' refers to guiding clients so that they conform to the specific service path determined for them by the welfare department.",
+    options: ["True", "False"],
+    correct: 1,
+    explanation: "False. Empowerment means ensuring people have opportunities to make choices about the actions they want to take, and the ability to have those choices implemented — it's about fostering agency and autonomy, not forcing conformity to a pre-set departmental path."
+  },
+  { type:'tf', tag:'Section B · True/False',
+    q: "The element of 'locality' dictates that for a community to exist, its members must reside within a permanently fixed, geographically unchangeable boundary that cannot move under any circumstances.",
+    options: ["True", "False"],
+    correct: 1,
+    explanation: "False. While locality is a key element, the territory need not be fixed indefinitely — nomadic communities move across regions yet maintain strong ties of togetherness and shared identity. Modern definitions also extend to virtual communities."
+  },
+  { type:'tf', tag:'Section B · True/False',
+    q: "The element of 'community sentiment' refers to a strong sense of belonging, awe, and mutual solidarity that develops naturally among residents of an area over an extended period of common living.",
+    options: ["True", "False"],
+    correct: 0,
+    explanation: "True. Community sentiment is the sense of belongingness and mutual connection among residents — living together in a locality over time naturally fosters shared customs, experiences, and a deep sense of mutual solidarity."
+  },
+  { type:'match', tag:'Section C · Matching', unscored: true,
+    q: "Match the following core underpinning values of community work with their correct definitions:",
+    pairs: [
+      "<b>Commitment to Empowerment</b> — Ensuring that people have opportunities to make choices about the actions they would like to take and have the ability to have those choices implemented.",
+      "<b>Commitment to Social Inclusion</b> — Ensuring that all individuals and groups are able to participate fully in and benefit from the social, economic, and political activity of society as a whole.",
+      "<b>Commitment to Advancing Human Rights</b> — Recognizing the inherent value of each person, regardless of background, where we live, what we look like, or what we think or believe.",
+      "<b>Commitment to Social Justice</b> — Fairness and equity in the distribution of wealth, opportunities, and privileges within a society.",
+      "<b>Commitment to Collective Action or Advocacy</b> — The intrinsic importance of people working together to address common problems or issues."
+    ]
+  },
+  { type:'match', tag:'Section C · Matching', unscored: true,
+    q: "Match the following community practice definitions with their correct originating theorists/organizations:",
+    pairs: [
+      "<b>Community Development (UN, 1948)</b> — \"A process designed to create conditions of economic and social progress for the entire community through active participation and full reliance on the community's initiative.\"",
+      "<b>Community Organisation &amp; Building (Rothman &amp; Minkler)</b> — \"A process by which community groups are assisted in identifying common problems or goals, mobilizing resources, and developing and implementing strategies for reaching the goals they have collectively set.\"",
+      "<b>Community Practice (Weil, Reisch &amp; Ohmer)</b> — \"Promoting long-term social and economic development, organizing more effective and responsive services, engaging in planning and policy development to solve old problems in new ways, and advancing human rights and social justice through political and social action.\""
+    ]
+  },
+  { type:'case', tag:'Section D · Case Study', unscored: true,
+    scenario: "John is a 28-year-old man living in Perth, Australia, diagnosed with cerebral palsy, a neurological disorder that affects his muscle coordination and movement. Despite his challenges, John is highly motivated to live independently. He uses a wheelchair for mobility and receives assistance from his family for daily living activities. John wishes to move into supported accommodation to foster greater independence. He also experiences anxiety and depression stemming from his feelings of dependency and social isolation. He has been receiving support from a Community Services Worker (CSW) through the National Disability Insurance Scheme (NDIS).",
+    q: "Identify at least three key roles or intervention steps that a Community Services Worker must undertake to support John in achieving his personal and mental health goals.",
+    modelAnswer: [
+      "<b>Assessment of Needs</b>: Conduct a holistic assessment of John's physical mobility requirements (housing modifications, wheelchair aids) alongside his emotional, mental, and social needs, working closely with him and his family.",
+      "<b>Facilitating Access to Services</b>: Coordinate and connect John with necessary NDIS support services, including occupational therapy, physical therapy, housing agencies, mental health counseling, and peer support groups.",
+      "<b>Advocacy</b>: Act as John's active advocate, ensuring his voice is prioritized in decisions regarding supported accommodation and that his rights to autonomy and choice are respected.",
+      "<b>Promoting Social Inclusion</b>: Actively combat John's social isolation and depression by encouraging participation in local community groups, volunteering, or disability advocacy organizations, and coordinating accessible transport."
+    ]
+  },
+  { type:'case', tag:'Section D · Case Study', unscored: true,
+    scenario: "Mary is an 82-year-old woman living in a rural town in New South Wales, Australia. She has been diagnosed with arthritis and early-stage dementia, making it increasingly difficult for her to manage daily tasks such as cooking, cleaning, and personal care. Mary lives alone, as her husband passed away several years ago, and her children live far away. Though she values her independence, Mary has begun to feel isolated and overwhelmed. She has been referred to community services for support under the Commonwealth Home Support Programme (CHSP).",
+    q: "Briefly outline how a Community Services Worker can support Mary to maintain her independence at home while addressing her isolation and physical healthcare needs.",
+    modelAnswer: [
+      "<b>In-Home Support Coordination</b>: Arrange essential in-home services such as house cleaning, meal preparation, personal hygiene care, and home safety modifications (e.g., ramps, grab rails) to protect her physical safety.",
+      "<b>Healthcare &amp; Dementia Support</b>: Ensure regular medical care, coordinate with medical professionals and occupational therapists for her arthritis and progressive dementia, and monitor cognitive changes.",
+      "<b>Combatting Loneliness &amp; Isolation</b>: Connect Mary with local senior centers, bingo, knitting, or gardening groups, and coordinate volunteer-based regular companionship check-ins.",
+      "<b>Transport Coordination</b>: Arrange reliable transport so rural isolation and mobility limitations do not prevent Mary from attending healthcare appointments and social outings."
+    ]
+  },
+  { type:'case', tag:'Section D · Case Study', unscored: true,
+    scenario: "You are part of the small community 'Student Land' of 300 people. The society includes highly diverse individuals. You have strong ties with the community and a sense of belonging, but community practices and formal supportive services are not developed yet. Your group's task is to prepare, develop, and justify three community practices that you consider helpful for the community.",
+    q: "Based on this problem-solving activity, list the five key steering questions that your group must answer in order to elaborate, develop, and justify your proposed community practices to the members.",
+    modelAnswer: [
+      "Why are these community practices important?",
+      "How would you present them to the rest of the community members?",
+      "What are potential obstacles in the implementation of these practices?",
+      "What are the expected benefits?",
+      "How will the community change due to the implementation of these services?"
+    ]
+  },
+  { type:'case', tag:'Section D · Case Study', unscored: true,
+    scenario: "In a small Australian town near Perth, heavy rainfall has caused severe flooding, impacting several homes. Among those affected is the Smith family, who have lost their home and belongings. The family consists of John (45), Emily (43), Sarah (12), and Tom (8). You are a Community Services Worker tasked with supporting the family through the recovery process.",
+    q: "Distinguish between the immediate support responsibilities you must coordinate and the longer-term support goals you must establish to help the Smith family rebuild their lives.",
+    modelAnswer: [
+      "<b>Immediate Emergency Support</b> (safety &amp; survival): Coordinate directly with local emergency services to secure emergency shelter/accommodation, supply food, water, clothing, and essential medication, and provide immediate trauma counseling/crisis support.",
+      "<b>Long-Term Support Goals</b> (rebuilding &amp; self-sufficiency): Coordinate long-term casework to help the family apply for transitional and public housing, navigate insurance claims, access financial counseling, replace household goods, and assist Sarah &amp; Tom in re-integrating into school."
+    ]
+  }
+];
+
+let current = 0;
+let answers = new Array(questions.length).fill(null); // for mcq/tf: chosen idx; for match/case: bool revealed
+let scoredAnswered = 0;
+let correctCount = 0;
+const totalScored = questions.filter(q => q.type === 'mcq' || q.type === 'tf').length;
+
+const qNumberEl = document.getElementById('q-number');
+const qContentEl = document.getElementById('q-content');
+const tagsEl = document.getElementById('tags');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const progressFill = document.getElementById('progress-fill');
+const progressLabel = document.getElementById('progress-label');
+const scoreChip = document.getElementById('score-chip');
+const tierLabel = document.getElementById('tier-label');
+const quizBody = document.getElementById('quiz-body');
+const resultsEl = document.getElementById('results');
+const resultsScore = document.getElementById('results-score');
+const resultsVerdict = document.getElementById('results-verdict');
+
+function renderQuestion(i){
+  const item = questions[i];
+  qNumberEl.textContent = `Question ${i+1}`;
+  tierLabel.textContent = item.tag;
+  tagsEl.innerHTML = `<span class="tier">${item.tag}</span>`;
+  qContentEl.innerHTML = '';
+
+  if(item.type === 'mcq' || item.type === 'tf'){
+    renderChoiceQuestion(item, i);
+  } else if(item.type === 'match'){
+    renderMatchQuestion(item, i);
+  } else if(item.type === 'case'){
+    renderCaseQuestion(item, i);
+  }
+
+  updateProgress();
+  updateNavButtons();
+}
+
+function renderChoiceQuestion(item, i){
+  const qText = document.createElement('p');
+  qText.className = 'q-text';
+  qText.textContent = item.q;
+  qContentEl.appendChild(qText);
+
+  const optionsWrap = document.createElement('div');
+  optionsWrap.className = 'options';
+
+  const chosen = answers[i];
+  const locked = chosen !== null;
+
+  item.options.forEach((optText, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option' + (locked ? ' locked' : '');
+    const letter = item.type === 'tf' ? (idx === 0 ? 'T' : 'F') : letters[idx];
+    btn.innerHTML = `<span class="letter">${letter}</span><span>${optText}</span>`;
+
+    if(locked){
+      if(idx === item.correct) btn.classList.add('correct');
+      if(idx === chosen && chosen !== item.correct) btn.classList.add('incorrect');
+      if(idx !== item.correct && idx !== chosen) btn.classList.add('dim');
+    }
+
+    btn.addEventListener('click', () => {
+      if(answers[i] !== null) return;
+      answers[i] = idx;
+      scoredAnswered++;
+      if(idx === item.correct) correctCount++;
+      renderQuestion(i);
+    });
+
+    optionsWrap.appendChild(btn);
+  });
+
+  qContentEl.appendChild(optionsWrap);
+
+  if(locked){
+    const isRight = chosen === item.correct;
+    const fb = document.createElement('div');
+    fb.className = 'feedback show ' + (isRight ? 'right' : 'wrong');
+    fb.innerHTML = `<strong>${isRight ? 'Correct.' : 'Not quite.'}</strong> ${item.explanation}`;
+    qContentEl.appendChild(fb);
+  }
+}
+
+function renderMatchQuestion(item, i){
+  const qText = document.createElement('p');
+  qText.className = 'q-text';
+  qText.textContent = item.q;
+  qContentEl.appendChild(qText);
+
+  const revealed = answers[i] === true;
+
+  if(!revealed){
+    const btn = document.createElement('button');
+    btn.className = 'reveal-btn';
+    btn.textContent = 'Reveal correct matches';
+    btn.addEventListener('click', () => {
+      answers[i] = true;
+      renderQuestion(i);
+    });
+    qContentEl.appendChild(btn);
+  } else {
+    const list = document.createElement('ul');
+    list.className = 'pairs-list';
+    item.pairs.forEach(p => {
+      const li = document.createElement('li');
+      li.innerHTML = p;
+      list.appendChild(li);
+    });
+    qContentEl.appendChild(list);
+    if(nextBtn.disabled) { /* no-op, updated below */ }
+  }
+}
+
+function renderCaseQuestion(item, i){
+  const scenario = document.createElement('div');
+  scenario.className = 'scenario-text';
+  scenario.textContent = item.scenario;
+  qContentEl.appendChild(scenario);
+
+  const qText = document.createElement('p');
+  qText.className = 'prompt-text';
+  qText.textContent = item.q;
+  qContentEl.appendChild(qText);
+
+  const revealed = answers[i] === true;
+
+  if(!revealed){
+    const btn = document.createElement('button');
+    btn.className = 'reveal-btn';
+    btn.textContent = 'Reveal model answer';
+    btn.addEventListener('click', () => {
+      answers[i] = true;
+      renderQuestion(i);
+    });
+    qContentEl.appendChild(btn);
+  } else {
+    const box = document.createElement('div');
+    box.className = 'model-answer show';
+    const ul = document.createElement('ul');
+    item.modelAnswer.forEach(m => {
+      const li = document.createElement('li');
+      li.innerHTML = m;
+      ul.appendChild(li);
+    });
+    box.innerHTML = '<strong>Model answer</strong>';
+    box.appendChild(ul);
+    qContentEl.appendChild(box);
+  }
+}
+
+function isAnswered(i){
+  return answers[i] !== null;
+}
+
+function updateProgress(){
+  const pct = ((current+1) / questions.length) * 100;
+  progressFill.style.width = pct + '%';
+  progressLabel.textContent = `Q${current+1} / ${questions.length}`;
+  scoreChip.textContent = `Score: ${correctCount} / ${scoredAnswered} answered`;
+}
+
+function updateNavButtons(){
+  prevBtn.disabled = current === 0;
+  nextBtn.disabled = !isAnswered(current);
+  nextBtn.textContent = current === questions.length - 1 ? 'See results →' : 'Next →';
+}
+
+prevBtn.addEventListener('click', () => {
+  if(current > 0){ current--; renderQuestion(current); }
+});
+
+nextBtn.addEventListener('click', () => {
+  if(current < questions.length - 1){
+    current++;
+    renderQuestion(current);
+  } else {
+    showResults();
+  }
+});
+
+function showResults(){
+  quizBody.classList.add('hide');
+  resultsEl.classList.add('show');
+  resultsScore.textContent = correctCount;
+
+  let verdict;
+  const pct = correctCount / totalScored;
+  if(pct === 1){
+    verdict = "Full marks on the scored questions. Your grasp of community work definitions, values, and structures is solid — the case studies are yours to build reasoning practice from.";
+  } else if(pct >= 0.78){
+    verdict = "Strong result. Revisit any missed MCQ/T-F items, then work back through the case studies to practise structuring a CSW response.";
+  } else if(pct >= 0.55){
+    verdict = "Solid foundation with some gaps. Re-read the sections on community values (empowerment, social inclusion) and the elements of community before the tutorial.";
+  } else {
+    verdict = "Worth another pass through the Week 2 readings — focus especially on the UN definition of community development and the core underpinning values.";
+  }
+  resultsVerdict.textContent = verdict;
+}
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  scoredAnswered = 0;
+  correctCount = 0;
+  resultsEl.classList.remove('show');
+  quizBody.classList.remove('hide');
+  renderQuestion(0);
+});
+
+document.getElementById('review-btn').addEventListener('click', () => {
+  current = 0;
+  resultsEl.classList.remove('show');
+  quizBody.classList.remove('hide');
+  renderQuestion(0);
+});
+
+renderQuestion(0);
+</script>
+
+</body>
+</html>
