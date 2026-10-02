@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Child Protection Process — Australia | Practice Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDE6D6; --paper-dark:#E2D9C4; --ink:#1C1C1A; --pine:#2B3A34; --pine-2:#3C4F47;
+  --leather:#8A6D3B; --leather-l:#A9895A; --alert:#B0392B; --line:#C9BDA0; --card:#F6F1E4;
+  --shadow: 0 2px 8px rgba(28,28,26,0.12);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#20231F; --paper-dark:#181A17; --ink:#EDE6D6; --pine:#C9BDA0; --pine-2:#A9895A;
+    --leather:#D9B87B; --leather-l:#E6CC9A; --alert:#E17A6C; --line:#4A4638; --card:#2A2C26;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#20231F; --paper-dark:#181A17; --ink:#EDE6D6; --pine:#C9BDA0; --pine-2:#A9895A;
+  --leather:#D9B87B; --leather-l:#E6CC9A; --alert:#E17A6C; --line:#4A4638; --card:#2A2C26;
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'Inter',sans-serif; line-height:1.5;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+h1,h2,h3{font-family:'Source Serif 4',serif; font-weight:600; margin:0 0 .4em;}
+p{margin:0 0 1em;}
+a{color:var(--leather);}
+.app{display:flex; min-height:100vh; max-width:1180px; margin:0 auto;}
+
+/* Left tab index */
+nav.tabs{
+  width:220px; flex-shrink:0; background:var(--pine); color:var(--paper);
+  padding:28px 0; position:sticky; top:0; align-self:flex-start; height:100vh;
+  overflow-y:auto;
+}
+nav.tabs .brand{padding:0 20px 22px; border-bottom:1px solid rgba(237,230,214,0.2); margin-bottom:10px;}
+nav.tabs .brand .kicker{font-size:.72rem; letter-spacing:.02em; color:var(--leather-l); font-weight:600;}
+nav.tabs .brand h1{font-size:1.15rem; color:var(--paper); margin-top:4px;}
+button.tabbtn{
+  display:block; width:100%; text-align:left; background:none; border:none; color:var(--paper);
+  font-family:'Inter',sans-serif; font-size:.95rem; padding:13px 20px; cursor:pointer;
+  border-left:3px solid transparent; opacity:.75;
+}
+button.tabbtn:hover{opacity:1; background:rgba(237,230,214,0.06);}
+button.tabbtn.active{opacity:1; border-left-color:var(--leather-l); background:rgba(237,230,214,0.09); font-weight:600;}
+button.tabbtn .n{font-family:'Source Serif 4',serif; opacity:.6; margin-right:8px;}
+
+main{flex:1; padding:38px 48px 80px; min-width:0;}
+.filehead{
+  display:flex; justify-content:space-between; align-items:flex-start; gap:20px;
+  border-bottom:2px solid var(--ink); padding-bottom:14px; margin-bottom:26px; flex-wrap:wrap;
+}
+.filehead h2{font-size:1.7rem;}
+.stamp{
+  font-family:'Inter',sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.04em;
+  border:2px solid var(--leather); color:var(--leather); padding:5px 10px; border-radius:2px;
+  transform:rotate(-2deg); white-space:nowrap;
+}
+.panel{display:none;} .panel.active{display:block;}
+.lede{font-size:1.05rem; max-width:62ch;}
+.callout{
+  background:var(--card); border-left:4px solid var(--leather); padding:14px 18px;
+  border-radius:0 4px 4px 0; margin:18px 0; font-size:.93rem; max-width:62ch;
+}
+.two-col{display:grid; grid-template-columns:1.3fr 1fr; gap:28px;}
+@media (max-width:820px){.two-col{grid-template-columns:1fr;}}
+
+/* Process stage cards */
+.stages{display:flex; flex-direction:column; gap:0; margin-top:22px; max-width:760px;}
+.stage{
+  border:1px solid var(--line); background:var(--card); border-radius:6px; margin-bottom:10px;
+  overflow:hidden; box-shadow:var(--shadow);
+}
+.stage.dashedflow{border-style:dashed;}
+.stage-head{
+  display:flex; align-items:center; gap:14px; padding:14px 18px; cursor:pointer; user-select:none;
+}
+.stage-num{
+  font-family:'Source Serif 4',serif; font-weight:700; font-size:1.1rem; color:var(--leather);
+  width:28px; text-align:center; flex-shrink:0;
+}
+.stage-head strong{font-size:1rem; flex:1;}
+.stage-tag{font-size:.72rem; padding:2px 8px; border-radius:10px; background:var(--pine); color:var(--paper); flex-shrink:0;}
+.stage-tag.opt{background:transparent; border:1px solid var(--line); color:var(--ink); opacity:.7;}
+.chev{transition:transform .25s ease; opacity:.6; flex-shrink:0;}
+.stage.open .chev{transform:rotate(180deg);}
+.stage-body{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+.stage-body-inner{padding:0 18px 18px 60px; font-size:.93rem;}
+.stage.open .stage-body{max-height:260px;}
+.legend{display:flex; gap:22px; font-size:.82rem; margin:16px 0 4px; flex-wrap:wrap; opacity:.85;}
+.legend span{display:inline-flex; align-items:center; gap:6px;}
+.swatch{width:12px; height:12px; border-radius:3px; background:var(--pine); display:inline-block;}
+.swatch.dash{background:none; border:1.5px dashed var(--line);}
+
+/* Flow diagram */
+.diagram-wrap{width:100%; overflow-x:auto; margin-top:14px; background:var(--card); border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow);}
+#flow{display:block; min-width:900px; width:100%; height:auto;}
+.fnode rect, .fnode polygon{stroke:var(--ink); stroke-width:1.4; cursor:pointer; transition:filter .15s ease;}
+.fnode:hover rect, .fnode:hover polygon{filter:brightness(0.94);}
+.fnode.plain rect{fill:var(--card);}
+.fnode.shaded rect, .fnode.shaded polygon{fill:var(--pine); opacity:.28;}
+.fnode.diamond polygon{fill:var(--paper-dark);}
+.fnode.service rect{fill:none; stroke:var(--leather); stroke-dasharray:4 3;}
+.fnode div.node-label{
+  font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.25; color:var(--ink);
+  display:flex; align-items:center; justify-content:center; text-align:center; height:100%; width:100%;
+  padding:2px; pointer-events:none;
+}
+.service-label{font-family:'Source Serif 4',serif; font-size:14px; font-weight:600; fill:var(--leather); text-anchor:middle;}
+.flow-edge{fill:none; stroke:var(--ink); stroke-width:1.5;}
+.flow-edge.dashed{stroke:var(--leather); stroke-dasharray:5 4;}
+.flow-tag{font-family:'Inter',sans-serif; font-size:11px; font-weight:600; fill:var(--ink); opacity:.6;}
+.diagram-info{margin-top:14px; background:var(--card); border-left:4px solid var(--leather); border-radius:0 4px 4px 0; padding:12px 16px; font-size:.9rem; max-width:62ch; min-height:1.4em;}
+
+/* Practice case */
+.case-card{
+  background:var(--card); border:1px solid var(--line); border-radius:8px; padding:26px 28px;
+  max-width:700px; box-shadow:var(--shadow);
+}
+.case-progress{display:flex; gap:6px; margin-bottom:20px;}
+.case-progress .dot{height:4px; flex:1; background:var(--line); border-radius:2px;}
+.case-progress .dot.done{background:var(--leather);}
+#caseBody h3{font-size:1.15rem; margin-bottom:.5em;}
+.opt-btn{
+  display:block; width:100%; text-align:left; background:var(--paper); border:1px solid var(--line);
+  border-radius:6px; padding:12px 16px; margin-bottom:10px; font-family:'Inter',sans-serif;
+  font-size:.94rem; cursor:pointer; color:var(--ink);
+}
+.opt-btn:hover{border-color:var(--leather);}
+.feedback{
+  margin-top:16px; padding:14px 16px; border-radius:6px; font-size:.92rem;
+  background:var(--paper-dark); border-left:4px solid var(--pine);
+}
+.feedback.caution{border-left-color:var(--alert);}
+.next-btn{
+  margin-top:16px; background:var(--pine); color:var(--paper); border:none; padding:10px 20px;
+  border-radius:6px; cursor:pointer; font-weight:600; font-family:'Inter',sans-serif;
+}
+.next-btn:hover{background:var(--pine-2);}
+.restart-btn{
+  background:none; border:1px solid var(--line); color:var(--ink); padding:9px 18px;
+  border-radius:6px; cursor:pointer; font-family:'Inter',sans-serif; margin-top:10px;
+}
+.summary-path{font-size:.88rem; color:var(--leather); margin-bottom:14px;}
+
+.case-menu{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; max-width:820px; margin-top:20px;}
+@media (max-width:700px){.case-menu{grid-template-columns:1fr;}}
+.case-tile{
+  background:var(--card); border:1px solid var(--line); border-radius:8px; padding:18px 20px;
+  cursor:pointer; box-shadow:var(--shadow);
+}
+.case-tile:hover{border-color:var(--leather);}
+.case-tile .tag{font-size:.72rem; color:var(--leather); font-weight:600; letter-spacing:.03em;}
+.case-tile h3{font-size:1.05rem; margin:.3em 0 .3em;}
+.case-tile p{font-size:.88rem; margin:0; opacity:.85;}
+.back-link{background:none; border:none; color:var(--leather); cursor:pointer; font-family:'Inter',sans-serif; font-size:.88rem; padding:0 0 14px; text-decoration:underline;}
+
+.q-score{font-size:1.3rem; font-family:'Source Serif 4',serif; font-weight:700; margin-bottom:6px;}
+.reflect-item{margin-bottom:22px; max-width:640px;}
+.reflect-item label{display:block; font-weight:600; margin-bottom:6px; font-size:.95rem;}
+.reflect-item textarea{
+  width:100%; min-height:80px; border:1px solid var(--line); border-radius:6px; padding:10px 12px;
+  font-family:'Inter',sans-serif; font-size:.9rem; background:var(--card); color:var(--ink); resize:vertical;
+}
+
+dl.glossary dt{font-family:'Source Serif 4',serif; font-weight:600; margin-top:16px;}
+dl.glossary dd{margin:2px 0 0; max-width:62ch;}
+footer.src{font-size:.8rem; opacity:.65; margin-top:50px; max-width:62ch;}
+
+.section-nav{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin-top:44px; padding:14px 4px 0; border-top:1px solid var(--line);
+  position:sticky; bottom:0; background:var(--paper);
+  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+}
+.navbtn{
+  background:var(--pine); color:var(--paper); border:none; padding:10px 18px;
+  border-radius:6px; cursor:pointer; font-weight:600; font-family:'Inter',sans-serif; font-size:.9rem;
+}
+.navbtn:hover{background:var(--pine-2);}
+.navbtn:disabled{opacity:.35; cursor:default; background:var(--line); color:var(--ink);}
+.navlabel{font-size:.8rem; opacity:.7; text-align:center; flex:1;}
+@media (max-width:720px){
+  .app{flex-direction:column;}
+  nav.tabs{width:100%; height:auto; position:relative; padding:16px 0;}
+  main{padding:26px 20px 60px;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="tabs" aria-label="Sections">
+    <div class="brand">
+      <div class="kicker">TRAINING MODULE</div>
+      <h1>Child Protection in Australia</h1>
+    </div>
+    <button class="tabbtn active" data-tab="overview"><span class="n">01</span>Overview</button>
+    <button class="tabbtn" data-tab="process"><span class="n">02</span>The Process</button>
+    <button class="tabbtn" data-tab="case"><span class="n">03</span>Practice Case Files</button>
+    <button class="tabbtn" data-tab="quiz"><span class="n">04</span>Quiz</button>
+    <button class="tabbtn" data-tab="reflection"><span class="n">05</span>Reflection</button>
+    <button class="tabbtn" data-tab="glossary"><span class="n">06</span>Glossary</button>
+  </nav>
+
+  <main>
+    <!-- OVERVIEW -->
+    <section class="panel active" id="overview">
+      <div class="filehead">
+        <h2>How the system works</h2>
+        <span class="stamp">FOR TRAINING USE</span>
+      </div>
+      <p class="lede">In Australia, each state and territory runs its own statutory child protection system. Departments respond to children who have been — or are at risk of being — abused, neglected, or otherwise harmed, or whose families can't provide adequate care. Delivery is shared: government departments run the statutory process, while non-government organisations mostly deliver the support services families are referred into.</p>
+      <div class="two-col">
+        <div>
+          <p>Anyone can raise a concern about a child's welfare — a neighbour, a teacher, a doctor, police, a relative, or the child themselves. What happens next depends on <strong>screening</strong>: department staff weigh the report against a threshold that decides whether it needs a statutory child protection response, or is better met by a support service.</p>
+          <p>National data only captures reports that clear that threshold and become a <strong>child protection notification</strong>. Reports about things like financial hardship or social isolation, with no immediate protection concern, are usually redirected as a <strong>family support issue</strong> instead — and never enter the national statistics at all.</p>
+          <div class="callout">Because each jurisdiction sets its own threshold, the same set of facts can be screened differently in different states — this is one of the biggest sources of variation in the national data.</div>
+        </div>
+        <div>
+          <p style="font-size:.9rem; opacity:.85;">This module turns the process into something you can click through and practise. Use <strong>The Process</strong> to explore each stage, then use <strong>Practice Case File</strong> to act as the intake worker on a realistic (fictional) scenario and see how your calls compare to how the system is designed to respond.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="panel" id="process">
+      <div class="filehead"><h2>The child protection pathway</h2><span class="stamp">CLICK A BOX</span></div>
+      <p class="lede">Based on the AIHW national process diagram. Shaded boxes are the data collected nationally; white boxes are outcomes that redirect a family elsewhere; dashed arrows lead into voluntary support services.</p>
+      <div class="legend">
+        <span><span class="swatch"></span>Nationally reported step</span>
+        <span><span class="swatch" style="background:transparent;border:1.5px solid var(--line);"></span>Redirect / exit outcome</span>
+        <span><span class="swatch dash"></span>Dashed = voluntary support pathway</span>
+      </div>
+      <div class="diagram-wrap"><svg id="flow" viewBox="0 0 970 940" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      <div class="diagram-info" id="diagramInfo"><strong>Click any box</strong> in the diagram above to read what happens at that step.</div>
+    </section>
+
+    <!-- PRACTICE CASE -->
+    <section class="panel" id="case">
+      <div class="filehead"><h2>Practice Case Files</h2><span class="stamp" id="caseNumberStamp">CHOOSE A CASE</span></div>
+      <p class="lede">Four fictional scenarios. In each, you'll play the intake and casework role and make the calls a worker makes at each stage. There's no single "correct" script — jurisdictions vary — but each option is scored against how the process is designed to work.</p>
+      <div id="caseMenu" class="case-menu"></div>
+      <div class="case-card" id="casePlayer" style="display:none;">
+        <div class="case-progress" id="caseProgress"></div>
+        <div id="caseBody"></div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section class="panel" id="quiz">
+      <div class="filehead"><h2>Knowledge check</h2><span class="stamp">8 QUESTIONS — HARD</span></div>
+      <p class="lede">These go beyond definitions — they test whether you can apply the process logic to situations that don't have an obvious answer.</p>
+      <div class="case-card">
+        <div class="case-progress" id="quizProgress"></div>
+        <div id="quizBody"></div>
+      </div>
+    </section>
+
+    <!-- REFLECTION -->
+    <section class="panel" id="reflection">
+      <div class="filehead"><h2>Reflection</h2><span class="stamp">FOR YOUR NOTES</span></div>
+      <p class="lede">Short-answer prompts to consolidate what you practised. Your notes are saved only in this browser, so you can come back to them — nothing is sent anywhere.</p>
+      <div id="reflectList"></div>
+      <button class="restart-btn" id="clearReflect">Clear my notes</button>
+      <div class="callout" style="margin-top:28px;">
+        <strong>Moving forward.</strong> If you're heading into placement or a community services role: practise noticing your own instinct to either over-react (jump to removal) or under-react (dismiss a concern) — both showed up in these cases. Get comfortable asking "what does screening need to establish here?" before deciding anything, and always ask what happens to a family after a case is closed or a report is redirected — that follow-through is where real cases most often fall through.
+      </div>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section class="panel" id="glossary">
+      <div class="filehead"><h2>Key terms</h2></div>
+      <dl class="glossary" id="glossaryList"></dl>
+      <footer class="src">Adapted for training purposes from AIHW, <em>Child protection Australia 2020–21 — How does child protection work in Australia?</em>, Australian Institute of Health and Welfare. <a href="https://www.aihw.gov.au/reports/child-protection/child-protection-australia-2020-21/contents/understanding-child-protection/how-does-child-protection-work-in-australia" target="_blank" rel="noopener">Read the source report</a>. This module paraphrases and adapts that material for skills practice; it is not a legal or clinical guide, and the case scenario is entirely fictional.
+      <br>&copy; Kham Tran — <a href="https://khamtv.github.io" target="_blank" rel="noopener">khamtv.github.io</a></footer>
+    </section>
+
+    <div class="section-nav">
+      <button id="navBack" class="navbtn">&#8249; Back</button>
+      <span id="navLabel" class="navlabel"></span>
+      <button id="navNext" class="navbtn">Next &#8250;</button>
+    </div>
+  </main>
+</div>
+
+<script>
+// ---- Tabs ----
+const tabOrder = ['overview','process','case','quiz','reflection','glossary'];
+const tabLabels = {overview:'Overview', process:'The Process', case:'Practice Case Files', quiz:'Quiz', reflection:'Reflection', glossary:'Glossary'};
+function switchTab(id){
+  document.querySelectorAll('.tabbtn').forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id===id));
+  const idx = tabOrder.indexOf(id);
+  document.getElementById('navBack').disabled = idx<=0;
+  document.getElementById('navNext').disabled = idx>=tabOrder.length-1;
+  document.getElementById('navLabel').textContent = `${idx+1} / ${tabOrder.length} — ${tabLabels[id]}`;
+  window.scrollTo({top:0, behavior:'instant'});
+}
+document.querySelectorAll('.tabbtn').forEach(btn=>{
+  btn.addEventListener('click',()=>switchTab(btn.dataset.tab));
+});
+document.getElementById('navBack').addEventListener('click',()=>{
+  const cur = tabOrder.indexOf(document.querySelector('.panel.active').id);
+  if(cur>0) switchTab(tabOrder[cur-1]);
+});
+document.getElementById('navNext').addEventListener('click',()=>{
+  const cur = tabOrder.indexOf(document.querySelector('.panel.active').id);
+  if(cur<tabOrder.length-1) switchTab(tabOrder[cur+1]);
+});
+switchTab('overview');
+
+// ---- Process flow diagram (mirrors AIHW Fig. 1.1) ----
+const NS = 'http://www.w3.org/2000/svg';
+const nodes = [
+  {id:'report', x:20, y:10, w:520, h:55, label:'Report to state/territory child protection authority',
+    info:"Anyone worried about a child — a community member, teacher, doctor, police officer, relative, or the child themselves — can make a report to the department responsible for child protection in their state or territory."},
+  {id:'intake', x:20, y:100, w:230, h:65, label:'Report concerns the welfare of a child (intake)',
+    info:"The report describes a concern for a child's welfare and is treated as a possible child protection matter, moving on to screening against the jurisdiction's threshold."},
+  {id:'other', x:290, y:100, w:230, h:65, label:'Other (advice and referrals as required)',
+    info:"The report doesn't relate to a child protection concern. The department gives advice or refers the caller to another service, and it plays no further part in the statutory system."},
+  {id:'notification', x:20, y:205, w:230, h:70, shaded:true, label:'Child protection notification',
+    info:"The report meets the threshold for a formal child protection response. It's now recorded and counted in the national child protection notification data."},
+  {id:'notrecorded', x:290, y:205, w:250, h:80, label:'Child protection notification not recorded (advice and referrals as required)',
+    info:"The report doesn't meet the statutory threshold. The family is instead offered advice or a referral, and — because it never became a formal notification — it isn't part of the national data."},
+  {id:'investigation', x:20, y:320, w:230, h:60, shaded:true, label:'Investigation',
+    info:"Caseworkers investigate the notification — gathering information, and usually meeting with the child and family — to assess safety and wellbeing."},
+  {id:'notinvestigated', x:290, y:320, w:250, h:60, label:'Not investigated (dealt with by other means)',
+    info:"The notification is resolved without a full formal investigation — for example, because the concern is addressed through another service."},
+  {id:'substantiation', x:20, y:420, w:230, h:60, shaded:true, label:'Substantiation',
+    info:"The investigation's finding on whether abuse, neglect, or harm to the child — or risk of it — was confirmed."},
+  {id:'notsubstantiated', x:290, y:420, w:250, h:60, label:'Not substantiated',
+    info:"The investigation doesn't confirm abuse or neglect. On its own, this doesn't mean no help is needed — families can still be linked to support services."},
+  {id:'safe', x:40, y:485, w:190, h:100, diamond:true, label:'Is the child safe?',
+    info:"The pivotal question after substantiation: based on everything found, can the child safely remain where they are?"},
+  {id:'casemgmt', x:10, y:655, w:250, h:70, label:'Provision of case management and/or referrals as required',
+    info:"Yes — the child stays safely at home. The family may still get case management or referrals to services to reduce the risk of the concern recurring."},
+  {id:'closed', x:10, y:760, w:250, h:55, label:'If the child is safe, case closed',
+    info:"Once statutory involvement is no longer needed, the case is formally closed."},
+  {id:'order', x:300, y:655, w:210, h:80, shaded:true, label:'Care and protection order and case management',
+    info:"No — a court grants a care and protection order, giving the department parental responsibility or specific authority, and the department takes on ongoing case management."},
+  {id:'ooh', x:535, y:655, w:135, h:60, shaded:true, label:'Out-of-home care',
+    info:"The child is placed in overnight care away from their birth family — for example with relatives (kinship care), foster carers, or in residential care."},
+  {id:'otherplace', x:695, y:655, w:135, h:60, shaded:true, label:'Other placements',
+    info:"A placement arrangement outside standard out-of-home care categories."},
+  {id:'reunification', x:535, y:760, w:135, h:60, shaded:true, label:'Reunification',
+    info:"The goal for many children in care: a safe, supported return to their family, often alongside intensive family support services."},
+  {id:'permanent', x:695, y:760, w:135, h:60, shaded:true, label:'Permanent placement',
+    info:"A long-term, stable placement is arranged for the child, such as guardianship or adoption, when returning home isn't possible."},
+  {id:'exit', x:230, y:865, w:280, h:55, label:'Exit from system',
+    info:"The child and family exit the statutory child protection system — whether through case closure, reunification, or a permanent placement."},
+  {id:'universal', x:790, y:100, w:160, h:110, service:true, label:'Universal prevention services',
+    info:"Community-wide, prevention-focused services aimed at supporting families and children before problems escalate — open to everyone, not just families already in contact with child protection."},
+  {id:'secondary', x:790, y:245, w:160, h:250, service:true, label:'Secondary support services',
+    info:"Targeted support for families showing early signs of vulnerability, offered when a report doesn't need — or no longer needs — a formal child protection response."},
+  {id:'intensive', x:790, y:690, w:160, h:145, service:true, label:'Intensive family support services',
+    info:"Higher-intensity, often voluntary support aimed at preventing entry — or re-entry — into the statutory system, or supporting a safe reunification."},
+];
+
+function mid(n){ return {x:n.x+n.w/2, y:n.y+n.h/2}; }
+function topPt(n){ return {x:n.x+n.w/2, y:n.y}; }
+function bottom(n){ return {x:n.x+n.w/2, y:n.y+n.h}; }
+function left(n){ return {x:n.x, y:n.y+n.h/2}; }
+function right(n){ return {x:n.x+n.w, y:n.y+n.h/2}; }
+const byId = Object.fromEntries(nodes.map(n=>[n.id,n]));
+
+function path(d, dashed){
+  const p = document.createElementNS(NS,'path');
+  p.setAttribute('d', d);
+  p.setAttribute('class', 'flow-edge'+(dashed?' dashed':''));
+  p.setAttribute('marker-end', 'url(#arrow)');
+  return p;
+}
+
+const svg = document.getElementById('flow');
+// defs: arrowhead
+const defs = document.createElementNS(NS,'defs');
+defs.innerHTML = `<marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="var(--ink)"></path></marker>`;
+svg.appendChild(defs);
+
+// edges (drawn first, under nodes)
+const edges = [
+  path(`M${mid(byId.report).x},${byId.report.y+55} L${mid(byId.report).x},80 M${mid(byId.intake).x},80 L${mid(byId.other).x},80`, false),
+  path(`M${mid(byId.intake).x},80 L${topPt(byId.intake).x},${topPt(byId.intake).y}`, false),
+  path(`M${mid(byId.other).x},80 L${topPt(byId.other).x},${topPt(byId.other).y}`, false),
+  path(`M${bottom(byId.intake).x},${bottom(byId.intake).y} L${topPt(byId.notification).x},${topPt(byId.notification).y}`, false),
+  path(`M${right(byId.intake).x},${right(byId.intake).y} L${left(byId.other).x},${left(byId.other).y}`, false),
+  path(`M${right(byId.other).x},${right(byId.other).y} L${byId.universal.x},${mid(byId.universal).y}`, true),
+  path(`M${bottom(byId.notification).x},${bottom(byId.notification).y} L${topPt(byId.investigation).x},${topPt(byId.investigation).y}`, false),
+  path(`M${right(byId.notification).x},${right(byId.notification).y} L${left(byId.notrecorded).x},${left(byId.notrecorded).y}`, false),
+  path(`M${right(byId.notrecorded).x},${right(byId.notrecorded).y} L${byId.secondary.x},${byId.secondary.y+30}`, true),
+  path(`M${bottom(byId.investigation).x},${bottom(byId.investigation).y} L${topPt(byId.substantiation).x},${topPt(byId.substantiation).y}`, false),
+  path(`M${right(byId.investigation).x},${right(byId.investigation).y} L${left(byId.notinvestigated).x},${left(byId.notinvestigated).y}`, false),
+  path(`M${right(byId.notinvestigated).x},${right(byId.notinvestigated).y} L${byId.secondary.x},${mid(byId.secondary).y}`, true),
+  path(`M${right(byId.substantiation).x},${right(byId.substantiation).y} L${left(byId.notsubstantiated).x},${left(byId.notsubstantiated).y}`, false),
+  path(`M${right(byId.notsubstantiated).x},${right(byId.notsubstantiated).y} L${byId.secondary.x},${byId.secondary.y+220}`, true),
+  path(`M${bottom(byId.substantiation).x},${bottom(byId.substantiation).y} L${topPt(byId.safe).x},${topPt(byId.safe).y}`, false),
+  path(`M${byId.safe.x},${mid(byId.safe).y} L10,${mid(byId.safe).y} L10,${topPt(byId.casemgmt).y} L${topPt(byId.casemgmt).x},${topPt(byId.casemgmt).y}`, false),
+  path(`M${byId.safe.x+byId.safe.w},${mid(byId.safe).y} L${mid(byId.order).x},${mid(byId.safe).y} L${mid(byId.order).x},${topPt(byId.order).y}`, false),
+  path(`M${bottom(byId.casemgmt).x},${bottom(byId.casemgmt).y} L${topPt(byId.closed).x},${topPt(byId.closed).y}`, false),
+  path(`M${bottom(byId.closed).x},${bottom(byId.closed).y} L${bottom(byId.closed).x},${mid(byId.exit).y} L${byId.exit.x},${mid(byId.exit).y}`, false),
+  path(`M${right(byId.order).x},${right(byId.order).y} L${left(byId.ooh).x},${left(byId.ooh).y}`, false),
+  path(`M${right(byId.ooh).x},${right(byId.ooh).y} L${left(byId.otherplace).x},${left(byId.otherplace).y}`, false),
+  path(`M${bottom(byId.ooh).x},${bottom(byId.ooh).y} L${topPt(byId.reunification).x},${topPt(byId.reunification).y}`, false),
+  path(`M${bottom(byId.otherplace).x},${bottom(byId.otherplace).y} L${topPt(byId.permanent).x},${topPt(byId.permanent).y}`, false),
+  path(`M${left(byId.reunification).x},${left(byId.reunification).y} L${right(byId.closed).x+30},${left(byId.reunification).y} L${right(byId.closed).x+30},${bottom(byId.closed).y-8} L${right(byId.closed).x},${bottom(byId.closed).y-8}`, true),
+  path(`M${right(byId.reunification).x},${right(byId.reunification).y} L${byId.intensive.x},${mid(byId.intensive).y}`, true),
+  path(`M${bottom(byId.reunification).x},${bottom(byId.reunification).y} L${bottom(byId.reunification).x},${mid(byId.exit).y} L${byId.exit.x+byId.exit.w*0.35},${mid(byId.exit).y}`, false),
+  path(`M${bottom(byId.permanent).x},${bottom(byId.permanent).y} L${bottom(byId.permanent).x},${mid(byId.exit).y} L${byId.exit.x+byId.exit.w*0.65},${mid(byId.exit).y}`, false),
+];
+edges.forEach(e=>svg.appendChild(e));
+
+// yes/no labels
+[['Yes',20,mid(byId.safe).y-8],['No',byId.safe.x+byId.safe.w+18,mid(byId.safe).y-8]].forEach(([t,x,y])=>{
+  const txt = document.createElementNS(NS,'text');
+  txt.setAttribute('x',x); txt.setAttribute('y',y); txt.setAttribute('class','flow-tag');
+  txt.textContent = t; svg.appendChild(txt);
+});
+
+// nodes
+nodes.forEach(n=>{
+  const g = document.createElementNS(NS,'g');
+  g.setAttribute('class','fnode'+(n.shaded?' shaded':(n.service?' service':' plain')));
+  g.setAttribute('data-id', n.id);
+  if(n.diamond){
+    const cx=n.x+n.w/2, cy=n.y+n.h/2;
+    const poly = document.createElementNS(NS,'polygon');
+    poly.setAttribute('points', `${cx},${n.y} ${n.x+n.w},${cy} ${cx},${n.y+n.h} ${n.x},${cy}`);
+    g.appendChild(poly);
+  } else {
+    const rect = document.createElementNS(NS,'rect');
+    rect.setAttribute('x',n.x); rect.setAttribute('y',n.y);
+    rect.setAttribute('width',n.w); rect.setAttribute('height',n.h);
+    rect.setAttribute('rx', n.service?10:8);
+    g.appendChild(rect);
+  }
+  const fo = document.createElementNS(NS,'foreignObject');
+  const pad = n.diamond ? n.w*0.22 : 6;
+  fo.setAttribute('x', n.x+pad); fo.setAttribute('y', n.y+ (n.diamond? n.h*0.28:2));
+  fo.setAttribute('width', n.w-pad*2); fo.setAttribute('height', n.diamond? n.h*0.44 : n.h-4);
+  const div = document.createElement('div');
+  div.setAttribute('xmlns','http://www.w3.org/1999/xhtml');
+  div.className='node-label';
+  if(n.service) div.style.fontWeight='600';
+  div.textContent = n.label;
+  fo.appendChild(div);
+  g.appendChild(fo);
+  g.addEventListener('click', ()=>{
+    document.getElementById('diagramInfo').innerHTML = `<strong>${n.label}</strong> — ${n.info}`;
+  });
+  svg.appendChild(g);
+});
+
+// ---- Glossary ----
+const glossary = [
+  ["Notification","A report of concern that has cleared the department's screening threshold and is treated as a formal child protection matter."],
+  ["Substantiation","The outcome of an investigation confirming that abuse, neglect, or harm (or risk of it) was found."],
+  ["Care and protection order","A legal order, made by a court, that gives a department or another party parental responsibility or specific authority over a child's care."],
+  ["Out-of-home care","Overnight care for children who can't live with their birth family, e.g. with relatives, foster carers, or in residential care."],
+  ["Intensive family support services","Voluntary, higher-intensity services aimed at keeping a family together or supporting reunification, often used alongside the statutory system."],
+];
+const gl = document.getElementById('glossaryList');
+glossary.forEach(([term,def])=>{
+  gl.innerHTML += `<dt>${term}</dt><dd>${def}</dd>`;
+});
+
+// ---- Practice cases: branching scenarios ----
+const casesData = {
+mia: { title:"The Missed Shopping", stamp:"CASE 2024–0158", synopsis:"A 7-year-old shows signs of neglect tied to sudden family hardship.",
+steps: {
+  start:{
+    progress:1,
+    html:`<h3>Intake call</h3>
+    <p>Mia, age 7, is in Year 2 at a local primary school. Over the past three weeks her teacher has noticed she often arrives hungry and in the same unwashed clothes, and seems increasingly withdrawn. The teacher mentions Mia said her mum "hasn't been able to do the shopping" since losing her job last month. The teacher calls the department's reporting line. You take the call.</p>
+    <p><strong>What's your first move?</strong></p>`,
+    options:[
+      {label:"Log it as a child protection notification straight away, given the signs of neglect.", to:"a_over", feedback:"Not quite the design intent. A single report doesn't get classified before it's screened — jumping straight to a notification skips the threshold check every jurisdiction applies first.", caution:true},
+      {label:"Screen the report first: ask the teacher more about frequency, safety risk, and whether this looks like hardship or a protection concern.", to:"a_good", feedback:"This is the intended first step. Screening exists precisely to sort reports like this one — is it a family support issue, or does it meet the threshold for a formal notification?"},
+      {label:"Tell the teacher this isn't a matter for the department and suggest the school handle it internally.", to:"a_under", feedback:"Under-responding. The report still needs to be screened by the department — the signs described (hunger, hygiene, withdrawal) are exactly the kind of concern the system exists to weigh up.", caution:true},
+    ]
+  },
+  a_good:{
+    progress:2,
+    html:`<h3>Screening outcome</h3>
+    <p>You gather more detail: no signs of physical harm, no safety risk reported, but a clear pattern over three weeks tied to a recent job loss. There's no other support currently involved with the family.</p>
+    <p><strong>How do you classify this report?</strong></p>`,
+    options:[
+      {label:"Family support issue — refer to a family support service to help with the immediate hardship.", to:"b_support", feedback:"Consistent with the process: this pattern reads as a family under financial strain rather than an immediate protection risk, which is the kind of case usually redirected to voluntary support rather than into the statutory system."},
+      {label:"Child protection notification — the hunger and hygiene signs are enough to investigate formally.", to:"b_notify", feedback:"A defensible call in some jurisdictions, since thresholds vary — but worth noticing this pushes a hardship-driven case into the formal investigation pathway rather than early support.", caution:true},
+    ]
+  },
+  a_over:{
+    progress:2,
+    html:`<h3>Straight to notification</h3>
+    <p>You've logged this as a formal notification without further screening. A caseworker is assigned to investigate.</p>
+    <p><strong>Now that it's open, what does the caseworker prioritise?</strong></p>`,
+    options:[
+      {label:"Interview Mia and her mother, and check whether the family has any support already in place.", to:"c_invest", feedback:"Reasonable investigative step, though this case may not have needed a full statutory investigation if it had been screened for a support pathway first."}
+    ]
+  },
+  a_under:{
+    progress:2,
+    html:`<h3>Report waved off</h3>
+    <p>No screening happens. Two weeks later, the teacher calls again — Mia's situation hasn't improved, and now a second staff member has also raised concerns.</p>
+    <p><strong>What now?</strong></p>`,
+    options:[
+      {label:"Screen this report properly this time.", to:"a_good", feedback:"Better late than not at all — but the earlier delay meant a hardship situation went unsupported for two extra weeks."}
+    ]
+  },
+  b_support:{
+    progress:3,
+    html:`<h3>Referral to family support</h3>
+    <p>The family is connected with a local family support service offering food relief and help accessing income support. This sits outside the formal child protection notification count.</p>
+    <p><strong>Six weeks later, how do you follow up?</strong></p>`,
+    options:[
+      {label:"Check in with the school and the support service — support is voluntary, so confirm the family is actually engaging.", to:"end_support_good", feedback:"Right instinct. Referral into voluntary services doesn't guarantee uptake, so following up matters — and if things haven't improved, the case can still be re-screened as a notification."},
+      {label:"Consider the case closed — it's now the support service's responsibility.", to:"end_support_risk", feedback:"A common gap in practice: because these services are voluntary, a family that disengages can slip through if no one checks back in.", caution:true},
+    ]
+  },
+  b_notify:{
+    progress:3,
+    html:`<h3>Investigation begins</h3>
+    <p>A caseworker is assigned. The investigation finds no evidence of abuse, but confirms the family is under real financial strain with no other support in place.</p>
+    <p><strong>What's the substantiation outcome?</strong></p>`,
+    options:[
+      {label:"Not substantiated for abuse or neglect — refer the family to intensive family support services instead of closing the case cold.", to:"end_notify_good", feedback:"This is how the pathway is meant to work even after a formal investigation: an unsubstantiated outcome doesn't mean no help is offered — support and the statutory system aren't mutually exclusive."},
+      {label:"Not substantiated — close the case with no referral.", to:"end_notify_risk", feedback:"Technically accurate on substantiation, but a missed opportunity: the underlying hardship that triggered the report is still there.", caution:true},
+    ]
+  },
+  c_invest:{
+    progress:3,
+    html:`<h3>Investigation finding</h3>
+    <p>The caseworker finds no abuse or immediate danger — just a family stretched thin since a job loss.</p>
+    <p><strong>What's the outcome?</strong></p>`,
+    options:[
+      {label:"Not substantiated — refer to family support services now that the formal process has run its course.", to:"end_notify_good", feedback:"A reasonable landing point, though it arrived here via a heavier process than the case likely needed."},
+    ]
+  },
+  end_support_good:{progress:4, terminal:true, path:"Screened as family support → referred → followed up", summary:"You identified this as a hardship-driven case early, kept it out of the formal notification system, and followed up to make sure voluntary support actually reached the family. This matches how AIHW describes the system's intent: early intervention and family support are meant to prevent families from entering — or re-entering — the statutory child protection system."},
+  end_support_risk:{progress:4, terminal:true, path:"Screened as family support → referred → no follow-up", summary:"The referral itself was the right call, but closing the loop matters: support services are voluntary, and families under strain don't always engage without a check-in. In practice, this is one of the more common places a case can quietly fall through."},
+  end_notify_good:{progress:4, terminal:true, path:"Notification → investigated → not substantiated → referred to support", summary:"The case moved through the full statutory pathway before landing on the same underlying need: family support. This shows why AIHW notes children and families can move in and out of support services and the statutory system — an unsubstantiated finding still calls for a response."},
+  end_notify_risk:{progress:4, terminal:true, path:"Notification → investigated → not substantiated → closed", summary:"Substantiation was assessed correctly, but closing the case without a referral leaves the original hardship unaddressed — a good illustration of why the process description stresses linking families to support services even outside the formal order pathway."},
+}},
+
+jayden: { title:"Left Alone", stamp:"CASE 2024–0212", synopsis:"A toddler is repeatedly found unsupervised near a busy road.",
+steps: {
+  start:{ progress:1, html:`<h3>Intake call</h3><p>A neighbour has twice seen Jayden, aged 3, wandering onto the footpath alone near a busy road while his mother — a single parent working night shifts — is asleep during the day. No other adult is home. The neighbour calls the department.</p><p><strong>What's your first move?</strong></p>`,
+    options:[
+      {label:"Screen the report: ask how often this happens, how close the danger is, and whether any support is in place.", to:"j_good", feedback:"Right first step — screening has to establish frequency and immediacy of risk before anything else is decided."},
+      {label:"Classify it as urgent and arrange for Jayden's immediate removal.", to:"j_over", feedback:"Removal isn't a first response. It's a serious step reserved for when assessment shows no safer option — jumping there skips the process entirely.", caution:true},
+      {label:"Suggest the neighbour speak to the mother directly instead of involving the department.", to:"j_under", feedback:"Under-responding. A toddler with repeated unsupervised access to a road is exactly the kind of immediate safety signal the system needs to assess directly.", caution:true},
+    ]},
+  j_good:{ progress:2, html:`<h3>Screening outcome</h3><p>Screening confirms this has happened at least twice in two weeks, with a real risk of traffic injury each time. The mother has no childcare support for her sleep hours.</p><p><strong>How do you classify this?</strong></p>`,
+    options:[
+      {label:"Family support issue — refer to a parenting/childcare subsidy service, nothing further.", to:"j_underclassify", feedback:"This underweighs the immediate physical danger. Repeated, unsupervised access to a road is the kind of concrete safety risk that typically does meet the notification threshold, not just a support gap.", caution:true},
+      {label:"Child protection notification — the repeated, immediate danger meets the threshold; support needs can be addressed alongside it.", to:"j_notify", feedback:"This reflects how immediate physical risk is usually weighed — notification doesn't rule out addressing the underlying support gap at the same time."},
+    ]},
+  j_underclassify:{ progress:3, html:`<h3>Two weeks later</h3><p>Jayden is found wandering again — this time a passing driver had to brake suddenly. The school holiday childcare referral was never taken up.</p><p><strong>What now?</strong></p>`,
+    options:[{label:"Re-screen as a notification given the repeated, escalating risk.", to:"j_notify", feedback:"This is the right correction — but it took a near-miss to get there, which is exactly the risk of classifying immediate physical danger as a support-only issue."}]},
+  j_over:{ progress:2, html:`<h3>After removal</h3><p>Jayden is placed in emergency care while the department investigates. The investigation finds no other risk factors — just a mother with no back-up childcare for her work hours.</p><p><strong>What's the appropriate next step?</strong></p>`,
+    options:[{label:"Reassess for reunification with a safety plan and childcare support in place.", to:"j_good_outcome", feedback:"The right correction, though the initial removal was likely more disruptive than the situation needed — investigation first would have reached the same safety plan without it."}]},
+  j_under:{ progress:2, html:`<h3>No department action</h3><p>Three weeks later, Jayden wanders further from home and is found by police near a main road.</p><p><strong>What now?</strong></p>`,
+    options:[{label:"Screen this properly now.", to:"j_good", feedback:"Correct, but later than it should have been — the initial report already showed a real, recurring danger."}]},
+  j_notify:{ progress:3, html:`<h3>Investigation</h3><p>Investigation confirms no abuse, no other household risk — just a genuine supervision gap tied to shift work and no support network.</p><p><strong>What's the outcome?</strong></p>`,
+    options:[
+      {label:"Substantiated for risk of harm; child remains at home with a safety plan and referral to intensive family support for childcare.", to:"j_good_outcome", feedback:"This matches the intended design: substantiation doesn't automatically mean removal — case management and support can resolve a safety gap while the child stays home."},
+      {label:"Apply for a care and protection order given the substantiated risk.", to:"j_orderrisk", feedback:"An order is a significant step. Where the child can be kept safe at home through case management and a support referral, this is a heavier response than the situation calls for.", caution:true},
+    ]},
+  j_good_outcome:{progress:4, terminal:true, path:"Screened → notified → substantiated → safety plan at home", summary:"You treated the immediate physical risk seriously without over-escalating to removal. This is the balance the process is built around: substantiation triggers a proportionate response, and case management can close a safety gap without disrupting the family."},
+  j_orderrisk:{progress:4, terminal:true, path:"Screened → notified → substantiated → care order", summary:"The safety concern was real and correctly substantiated, but a care order is a heavier intervention than a supervision gap usually needs. Worth reflecting on when case management and support referral is the more proportionate tool."},
+}},
+
+violence: { title:"After the Call-Out", stamp:"CASE 2024–0339", synopsis:"Police attend a domestic disturbance; two children were in the home.", steps: {
+  start:{ progress:1, html:`<h3>Intake call</h3><p>Police attended a disturbance between parents overnight. No one was injured, but the two children, aged 5 and 9, were in the house at the time. Police refer the family to the department the next day.</p><p><strong>What's your first move?</strong></p>`,
+    options:[
+      {label:"Screen for immediate safety and check whether there's a history of similar call-outs.", to:"v_good", feedback:"Right approach — screening needs both the current safety picture and the pattern over time before classifying the report."},
+      {label:"Treat it as an adult relationship matter with no relevance to child protection.", to:"v_under", feedback:"Underweights the harm. Children's exposure to family violence — even without direct physical injury to them — is recognised as a potential form of harm in its own right.", caution:true},
+      {label:"Apply for a protection order immediately, before any further assessment.", to:"v_over", feedback:"Premature. Screening and assessment normally come before an order is sought, so the response matches what's actually happening in the household.", caution:true},
+    ]},
+  v_good:{ progress:2, html:`<h3>Screening outcome</h3><p>This is the third police call-out to the address in eight months. The children were home each time.</p><p><strong>How do you classify this?</strong></p>`,
+    options:[
+      {label:"Child protection notification — the pattern of repeated exposure meets the threshold.", to:"v_notify", feedback:"Consistent with how cumulative exposure is treated: a repeated pattern raises the risk profile even without a single high-severity incident."},
+      {label:"Family support issue only, since the children were never physically harmed.", to:"v_underclassify", feedback:"This misses that repeated exposure to family violence is itself a recognised category of harm, independent of direct physical injury to the children.", caution:true},
+    ]},
+  v_underclassify:{progress:3, html:`<h3>A further call-out</h3><p>Two months later, police attend a fourth incident at the same address.</p><p><strong>What now?</strong></p>`,
+    options:[{label:"Re-screen and escalate to a notification given the repeated pattern.", to:"v_notify", feedback:"The right correction — though the repeated pattern was already visible at the third call-out."}]},
+  v_under:{progress:2, html:`<h3>No department action</h3><p>Weeks later, the school reports the 9-year-old has become withdrawn and anxious about going home.</p><p><strong>What now?</strong></p>`,
+    options:[{label:"Screen the original report now, in light of this new information.", to:"v_good", feedback:"Correct, but the exposure had already been going on for weeks before this prompted action."}]},
+  v_over:{progress:2, html:`<h3>Order sought without assessment</h3><p>The order application stalls in court without an assessment to support it, and no safety planning has happened with the family in the meantime.</p><p><strong>What should happen instead?</strong></p>`,
+    options:[{label:"Withdraw and run the proper screening and investigation first.", to:"v_good", feedback:"Right correction — a court response works best once it's grounded in an actual safety assessment, not ahead of one."}]},
+  v_notify:{progress:3, html:`<h3>Investigation</h3><p>You need to gather information safely. Both parents are willing to talk.</p><p><strong>How do you run the interviews?</strong></p>`,
+    options:[
+      {label:"Speak with the non-offending parent separately and safely first, rather than interviewing both parents together.", to:"v_good_outcome", feedback:"This is standard safety practice: joint interviews in family-violence matters risk both physical safety and honest disclosure."},
+      {label:"Interview both parents together in the same room to save time and get a consistent account.", to:"v_riskoutcome", feedback:"This is a recognised bad practice in family-violence casework — it can endanger the person being controlled and suppress disclosure.", caution:true},
+    ]},
+  v_good_outcome:{progress:4, terminal:true, path:"Screened → notified → safe interview practice → substantiated (harm from exposure) → referred", summary:"You recognised cumulative exposure as harm and followed safe interview practice. The likely outcome: risk of emotional harm substantiated, with a safety plan and referral to intensive family violence support — proportionate to a pattern of exposure rather than a single incident."},
+  v_riskoutcome:{progress:4, terminal:true, path:"Screened → notified → joint interview → compromised assessment", summary:"The classification was right, but the interview approach risked both the family's physical safety and the reliability of what you learned — a good case for why family-violence casework has specific, non-negotiable safety protocols around who is interviewed, when, and separately."},
+}},
+
+amir: { title:"Slipping Through", stamp:"CASE 2024–0471", synopsis:"A 15-year-old is missing school and couch-surfing after conflict at home.", steps:{
+  start:{ progress:1, html:`<h3>Intake call</h3><p>Amir, 15, has missed 40% of school this term. A school counsellor reports he's mentioned "staying at a mate's place" after ongoing conflict at home with his stepfather. No physical harm has been disclosed.</p><p><strong>What's your first move?</strong></p>`,
+    options:[
+      {label:"Screen further: talk with Amir directly about his safety, where he's staying, and what's driving the conflict.", to:"a2_good", feedback:"Right approach — at Amir's age, hearing directly from him is central to an accurate screening decision."},
+      {label:"Classify this immediately as a family violence notification.", to:"a2_over", feedback:"Premature — there's no disclosure of violence yet, only conflict and disengagement. Screening needs to establish what's actually happening first.", caution:true},
+      {label:"Take no action — teenage conflict and school avoidance is normal at this age.", to:"a2_under", feedback:"Under-responds to a real risk pattern: missed school plus informal, unstable accommodation is a recognised early sign of homelessness risk for adolescents.", caution:true},
+    ]},
+  a2_good:{progress:2, html:`<h3>Screening outcome</h3><p>Amir says he doesn't feel safe raising things at home, but describes no violence — just constant arguments and feeling unwelcome since his stepfather moved in. He's staying with a friend's family, who are willing to keep helping short-term.</p><p><strong>How do you classify this?</strong></p>`,
+    options:[
+      {label:"Family support issue — referral to a youth homelessness service and family mediation, with follow-up.", to:"a2_support", feedback:"Matches the pattern: no safety disclosure, but real risk of drift into homelessness — the kind of case early intervention and family support services are designed for."},
+      {label:"Child protection notification, since he's not currently living at home.", to:"a2_notify", feedback:"Defensible in some jurisdictions given his living situation, though it moves a mediation-shaped problem into a heavier statutory process before support options are tried.", caution:true},
+    ]},
+  a2_over:{progress:2, html:`<h3>After escalation</h3><p>The notification proceeds to investigation, which finds no evidence of violence — just entrenched family conflict and a teenager avoiding school.</p><p><strong>What's the outcome?</strong></p>`,
+    options:[{label:"Not substantiated — refer to family mediation and a youth service instead.", to:"a2_support", feedback:"The right landing point, reached via a heavier process than the situation likely needed."}]},
+  a2_under:{progress:2, html:`<h3>Six weeks later</h3><p>Amir has now missed most of the term and is no longer in regular contact with the school at all.</p><p><strong>What now?</strong></p>`,
+    options:[{label:"Screen the case properly now.", to:"a2_good", feedback:"Correct, but the drift toward disengagement continued unaddressed for six extra weeks."}]},
+  a2_notify:{progress:3, html:`<h3>Investigation</h3><p>Investigation finds no violence or immediate danger, but confirms the unstable living arrangement and family conflict.</p><p><strong>What's the outcome?</strong></p>`,
+    options:[{label:"Not substantiated for abuse — refer to family mediation and youth homelessness support.", to:"a2_support", feedback:"Reasonable outcome, arrived at through a fuller process than the case likely required."}]},
+  a2_support:{progress:3, html:`<h3>Six weeks later</h3><p>Amir attended two mediation sessions with his mother and stepfather, then stopped responding. He's still occasionally staying at his friend's place.</p><p><strong>How do you follow up?</strong></p>`,
+    options:[
+      {label:"Check in directly with Amir, the school, and the youth service to see if disengagement means the plan isn't working.", to:"a2_good_outcome", feedback:"This is the key habit for voluntary referrals: disengagement is information, not case closure — it should prompt a check-in, not silence."},
+      {label:"Close the case — he engaged initially, which shows the referral worked.", to:"a2_risk_outcome", feedback:"A common trap: early engagement with a voluntary service doesn't mean the underlying risk has resolved, especially for a teenager still without stable housing.", caution:true},
+    ]},
+  a2_good_outcome:{progress:4, terminal:true, path:"Screened → family support → mediation → disengagement followed up", summary:"You treated disengagement from a voluntary service as a signal to check in rather than a sign of success. This is exactly the follow-through the process depends on for support-pathway cases, which — unlike statutory ones — have no automatic review point."},
+  a2_risk_outcome:{progress:4, terminal:true, path:"Screened → family support → mediation → closed on disengagement", summary:"Closing here risks missing that Amir's housing situation was never actually resolved. Voluntary engagement dropping off is one of the most common points where an adolescent's risk quietly continues unaddressed."},
+}},
+};
+
+let currentCaseId = null;
+function renderCaseMenu(){
+  const menu = document.getElementById('caseMenu');
+  menu.innerHTML='';
+  Object.entries(casesData).forEach(([id,c])=>{
+    const tile = document.createElement('div');
+    tile.className='case-tile';
+    tile.innerHTML = `<div class="tag">${c.stamp}</div><h3>${c.title}</h3><p>${c.synopsis}</p>`;
+    tile.addEventListener('click',()=>{
+      currentCaseId = id;
+      document.getElementById('caseNumberStamp').textContent = c.stamp;
+      document.getElementById('caseMenu').style.display='none';
+      document.getElementById('casePlayer').style.display='block';
+      renderCase('start');
+    });
+    menu.appendChild(tile);
+  });
+}
+renderCaseMenu();
+
+function backToCaseMenu(){
+  document.getElementById('caseMenu').style.display='grid';
+  document.getElementById('casePlayer').style.display='none';
+  document.getElementById('caseNumberStamp').textContent='CHOOSE A CASE';
+}
+
+let history = [];
+function renderCase(key){
+  const step = casesData[currentCaseId].steps[key];
+  history.push(key);
+  const total = 4;
+  const prog = document.getElementById('caseProgress');
+  prog.innerHTML = '';
+  for(let i=1;i<=total;i++){
+    prog.innerHTML += `<div class="dot ${i<=step.progress?'done':''}"></div>`;
+  }
+  const body = document.getElementById('caseBody');
+  if(step.terminal){
+    body.innerHTML = `<div class="summary-path">Pathway taken: ${step.path}</div>
+      <h3>Outcome</h3><p>${step.summary}</p>
+      <button class="restart-btn" id="restartBtn">Try a different pathway</button>
+      <button class="restart-btn" id="menuBtn">Choose another case</button>`;
+    document.getElementById('restartBtn').addEventListener('click',()=>{history=[]; renderCase('start');});
+    document.getElementById('menuBtn').addEventListener('click',backToCaseMenu);
+    return;
+  }
+  body.innerHTML = step.html;
+  const optWrap = document.createElement('div');
+  step.options.forEach(opt=>{
+    const b = document.createElement('button');
+    b.className='opt-btn';
+    b.textContent = opt.label;
+    b.addEventListener('click',()=>{
+      optWrap.querySelectorAll('button').forEach(x=>x.disabled=true);
+      const fb = document.createElement('div');
+      fb.className='feedback'+(opt.caution?' caution':'');
+      fb.textContent = opt.feedback;
+      body.appendChild(fb);
+      const nextBtn = document.createElement('button');
+      nextBtn.className='next-btn';
+      nextBtn.textContent='Continue';
+      nextBtn.addEventListener('click',()=>renderCase(opt.to));
+      body.appendChild(nextBtn);
+    });
+    optWrap.appendChild(b);
+  });
+  body.appendChild(optWrap);
+}
+
+// ---- Quiz ----
+const quizQuestions = [
+  {q:"A department screens a report and redirects the family to a support service without ever recording it as a notification. How does this appear in national child protection statistics?",
+   opts:["As a substantiated notification","As an unsubstantiated notification","It doesn't appear in the notification data at all","Only if the family is reported again within a year"], correct:2,
+   exp:"Family support redirections happen before a report becomes a notification, so they sit entirely outside the national notification count — one reason the data undercounts total concern about children."},
+  {q:"Which scenario is most likely to be classified as a family support issue rather than a formal notification, all else equal?",
+   opts:["A single report of financial hardship with no safety concern disclosed","A child repeatedly found unsupervised near a busy road","A pattern of police call-outs to family violence with children present each time","An investigation confirming a physical injury"], correct:0,
+   exp:"Hardship alone, without an immediate safety signal, is the profile the family support pathway is designed to catch and divert away from the statutory system."},
+  {q:"Two children in near-identical circumstances are reported in two different states; one becomes a formal notification, the other is redirected to family support. What does this best illustrate?",
+   opts:["A caseworker made an error in one state","Screening thresholds are set independently by each state and territory","National data automatically reconciles cases like this","Thresholds are standardised nationally, so this can't actually happen"], correct:1,
+   exp:"Each jurisdiction sets its own threshold for what counts as a notification — a major, well-documented reason the same facts can be handled differently depending on where they're reported."},
+  {q:"An investigation reaches a finding of 'not substantiated.' Which statement is most accurate?",
+   opts:["No harm occurred, so no further action is ever warranted","The finding permanently rules out future involvement with the family","The specific concern wasn't confirmed, but a referral to support can still be appropriate","It automatically triggers a care and protection order"], correct:2,
+   exp:"Not substantiated closes that particular investigation, not the family's access to help — referral to support services remains appropriate when underlying needs are evident."},
+  {q:"A child is regularly present in a home where family violence occurs but is never physically touched. Under contemporary child protection frameworks, this exposure is generally treated as:",
+   opts:["Irrelevant to the child's own welfare","Relevant only after five or more incidents","A potential form of harm in its own right, able to meet a notification threshold","Solely a policing matter, not a child protection one"], correct:2,
+   exp:"Exposure to family violence is recognised as a possible source of emotional and psychological harm to a child, independent of whether the child is ever directly hurt."},
+  {q:"A child can't safely return home, and a court rules out reunification. Which outcome best matches the pathway?",
+   opts:["Family support issue","Permanent placement, e.g. guardianship or adoption","Notification not recorded","Universal prevention service"], correct:1,
+   exp:"When reunification is ruled out, the pathway moves toward long-term stability for the child through a permanent placement arrangement."},
+  {q:"Which best describes how child protection service delivery is typically organised in Australia?",
+   opts:["NGOs run statutory investigations while government delivers support services","One national agency manages both statutory and support functions","Government departments run statutory functions; NGOs mostly deliver the support services","The same caseworker always handles both statutory and support roles"], correct:2,
+   exp:"Statutory powers (notification, investigation, orders) sit with government departments, while non-government organisations are the primary deliverers of family and community support services."},
+  {q:"A notification is substantiated, but the child is assessed as safe to remain at home. What's the most likely next step in the pathway?",
+   opts:["Automatic permanent placement","Case management and/or referrals while the child stays home","Immediate case closure with no further contact","Transfer to universal prevention services only"], correct:1,
+   exp:"Substantiation doesn't automatically mean removal — when a child can safely stay home, the response is case management and referrals rather than an order."},
+];
+let quizIdx=0, quizScore=0;
+function renderQuiz(){
+  const total=quizQuestions.length;
+  const prog=document.getElementById('quizProgress'); prog.innerHTML='';
+  for(let i=0;i<total;i++) prog.innerHTML+=`<div class="dot ${i<quizIdx?'done':''}"></div>`;
+  const body=document.getElementById('quizBody');
+  if(quizIdx>=total){
+    let msg = quizScore>=7?"Strong grasp of the nuance — you're reading these scenarios the way the process is designed, not just matching keywords.":
+      quizScore>=5?"Solid foundation, with some of the trickier distinctions (thresholds, cumulative harm, substantiation) worth another look.":
+      "Worth revisiting the Process and Practice Case tabs — several of these hinge on distinctions that are easy to skim past.";
+    body.innerHTML = `<div class="q-score">${quizScore} / ${total}</div><p>${msg}</p>
+      <button class="restart-btn" id="quizRestart">Retake the quiz</button>`;
+    document.getElementById('quizRestart').addEventListener('click',()=>{quizIdx=0; quizScore=0; renderQuiz();});
+    return;
+  }
+  const q=quizQuestions[quizIdx];
+  body.innerHTML = `<h3>Question ${quizIdx+1}</h3><p>${q.q}</p>`;
+  const wrap=document.createElement('div');
+  q.opts.forEach((opt,i)=>{
+    const b=document.createElement('button'); b.className='opt-btn'; b.textContent=opt;
+    b.addEventListener('click',()=>{
+      wrap.querySelectorAll('button').forEach(x=>x.disabled=true);
+      const correct = i===q.correct;
+      if(correct) quizScore++;
+      const fb=document.createElement('div');
+      fb.className='feedback'+(correct?'':' caution');
+      fb.innerHTML = `<strong>${correct?'Correct.':'Not quite.'}</strong> ${q.exp}`;
+      body.appendChild(fb);
+      const next=document.createElement('button'); next.className='next-btn'; next.textContent = quizIdx+1<total?'Next question':'See your score';
+      next.addEventListener('click',()=>{quizIdx++; renderQuiz();});
+      body.appendChild(next);
+    });
+    wrap.appendChild(b);
+  });
+  body.appendChild(wrap);
+}
+renderQuiz();
+
+// ---- Reflection ----
+const reflectPrompts = [
+  "Which case did you find hardest to classify, and what made the threshold unclear?",
+  "Describe a moment in one of the cases where you noticed yourself wanting to over-react or under-react. What pulled you back to a proportionate response?",
+  "What's one thing about how national child protection data is collected that changed how you'd read child protection statistics in future?",
+  "Thinking about your own placement or role ahead: what follow-up habit from these cases do you want to carry forward?",
+];
+const reflectList = document.getElementById('reflectList');
+reflectPrompts.forEach((p,i)=>{
+  const div=document.createElement('div'); div.className='reflect-item';
+  const key='cp_reflect_'+i;
+  let saved=''; try{ saved = localStorage.getItem(key) || ''; }catch(e){}
+  div.innerHTML = `<label>${i+1}. ${p}</label><textarea data-key="${key}">${saved}</textarea>`;
+  reflectList.appendChild(div);
+});
+reflectList.addEventListener('input',(e)=>{
+  if(e.target.tagName==='TEXTAREA'){
+    try{ localStorage.setItem(e.target.dataset.key, e.target.value); }catch(err){}
+  }
+});
+document.getElementById('clearReflect').addEventListener('click',()=>{
+  reflectList.querySelectorAll('textarea').forEach(t=>{ t.value=''; try{localStorage.removeItem(t.dataset.key);}catch(e){} });
+});
+</script>
+</body>
+</html>
